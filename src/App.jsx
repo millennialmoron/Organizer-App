@@ -1,7 +1,39 @@
+import { useState } from "react";
 import { Greeting } from "./components/Greeting";
+import { NewToDo } from "./components/NewToDo";
+import { ToDoItem } from "./components/ToDoItem";
 
 function App() {
-  return <Greeting />;
+  const [items, setItems] = useState([]);
+
+  function addItem(newItem) {
+    setItems((prevItems) => {
+      return [...prevItems, newItem];
+    });
+  }
+
+  function deleteItem(id) {
+    setItems((prevItems) => {
+      return prevItems.filter((item, index) => {
+        return index !== id;
+      });
+    });
+  }
+
+  return (
+    <div>
+      <Greeting />
+      <NewToDo onAdd={addItem} />
+      {items.map((todoItem, index) => (
+        <ToDoItem
+          key={index}
+          id={index}
+          text={todoItem}
+          onChecked={deleteItem}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default App;
