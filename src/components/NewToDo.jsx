@@ -3,7 +3,6 @@ import { ToDoInput } from "./ToDoInput";
 
 export function NewToDo(props) {
   const [inputText, setInputText] = useState("");
-  const [item, setItem] = useState("");
 
   function handleChange(event) {
     const newValue = event.target.value;
@@ -11,8 +10,8 @@ export function NewToDo(props) {
   }
 
   function submitItem(event) {
-    props.onAdd(item);
-    setItem("");
+    props.onAdd(inputText);
+    setInputText("");
     event.preventDefault();
   }
 
