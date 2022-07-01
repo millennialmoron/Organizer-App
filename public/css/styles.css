@@ -46,13 +46,12 @@ h1 {
 }
 
 input {
-  width: 13px;
-  height: 13px;
+  width: 150px;
+  height: 30px;
   padding: 0;
   margin: 0;
   vertical-align: bottom;
   position: relative;
-  top: -1px;
   *overflow: hidden;
 }
 

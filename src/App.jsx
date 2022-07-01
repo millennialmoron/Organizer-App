@@ -22,19 +22,23 @@ function App() {
 
   return (
     <div>
-      <Greeting />
-      <NewToDo onAdd={addItem} />
-      <div>
-        <ul>
-          {items.map((todoItem, index) => (
-            <ToDoItem
-              key={index}
-              id={index}
-              text={todoItem}
-              onChecked={deleteItem}
-            />
-          ))}
-        </ul>
+      <div className="box">
+        <Greeting />
+      </div>
+      <div className="box">
+        <NewToDo onAdd={addItem} />
+        <div>
+          <ul>
+            {items.map((todoItem, index) => (
+              <ToDoItem
+                key={index}
+                id={index}
+                text={todoItem}
+                onChecked={deleteItem}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
