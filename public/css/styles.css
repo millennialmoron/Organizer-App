@@ -109,6 +109,12 @@ input[type="text"]:focus {
   opacity: 1;
 }
 
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 footer {
   color: white;
   color: rgba(0, 0, 0, 0.5);

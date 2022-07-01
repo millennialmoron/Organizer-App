@@ -1,5 +1,7 @@
+import { Greeting } from "./components/Greeting";
+
 function App() {
-  return <h1>Kablam! Let's get going!</h1>;
+  return <Greeting />;
 }
 
 export default App;
