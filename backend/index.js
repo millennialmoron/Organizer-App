@@ -49,7 +49,21 @@ async function main() {
 
   const defaultItems = [item1, item2, item3];
 
-  app.get("/", function (req, res) {
+  // axios.get("http://localhost:3000/").then(function(response){
+  //   onSuccess(response);
+  // }).catch(function(error){
+  //   console.log(error);
+  // });
+
+  // function onSuccess(response){
+  //   const array = response;
+  //   const arrayLength = Object.keys(array).length;
+  //   for(var i = 0; i <= arrayLength; i++){
+
+  //   }
+  // }
+
+  axios.get("http://localhost:3000").then(function (req, res) {
     Item.find({}, function (err, itemsList) {
       if (err) {
         console.log(err);
@@ -62,10 +76,12 @@ async function main() {
               console.log("yes master.");
             }
           });
-          itemsList = defaultItems;
+          console.log(itemsList);
         }
       }
     });
+  }).catch(function(err){
+    console.log(err);
   });
 
   app.post("/", function (req, res) {

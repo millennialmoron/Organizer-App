@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
 
-const client = axios.create({ baseURL: "http://localhost:8000" });
+const client = axios.create({ baseURL: "http://localhost:3000" });
 
 function App() {
   const [items, setItems] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function getItems() {
       const response = await client.get("/");
       console.log(response.data);
     }
     getItems();
-  }, []);
+  });
 
   function addItem(newItem) {
     let index = 0;
@@ -25,7 +25,7 @@ function App() {
       index = items.length - 1;
     }
     axios.post("/", { name: newItem, id: index }).then((response) => {
-      console.log(response.data);
+      console.log(response);
     });
     setItems((prevItems) => {
       return [...prevItems, newItem];
