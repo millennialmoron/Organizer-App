@@ -33,7 +33,7 @@ function App() {
   }
 
   async function deleteItem(id) {
-    await client.delete("/", { id: id });
+    await client.delete("/delete", { id: id });
     alert("item deleted!");
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {

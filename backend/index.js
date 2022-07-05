@@ -47,42 +47,39 @@ async function main() {
   item3.name = "Dispose of remaining evidence.";
   item3._id = 2;
 
-  const defaultItems = [item1, item2, item3];
+  let defaultItems = [item1, item2, item3];
 
-  // axios.get("http://localhost:3000/").then(function(response){
-  //   onSuccess(response);
-  // }).catch(function(error){
-  //   console.log(error);
-  // });
-
-  // function onSuccess(response){
-  //   const array = response;
-  //   const arrayLength = Object.keys(array).length;
-  //   for(var i = 0; i <= arrayLength; i++){
-
-  //   }
-  // }
-
-  axios.get("http://localhost:3000").then(function (req, res) {
-    Item.find({}, function (err, itemsList) {
-      if (err) {
-        console.log(err);
-      } else {
-        if (itemsList.length === 0) {
-          Item.insertMany(defaultItems, function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("yes master.");
-            }
-          });
-          console.log(itemsList);
+  function findLists(){
+    Item.find({},function (err, itemsList) {
+        if (err) {
+          console.log(err);
+        } else {
+          if (itemsList.length === 0) {
+            Item.insertMany(defaultItems, function (err) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("yes master.");
+              }
+            });
+          }
         }
-      }
+        defaultItems = itemsList;
+      });
+      console.log(defaultItems);
+  }
+
+  axios
+    .get("http://localhost:3000")
+    .then(function (res) {
+      console.log(res.data);
+
+      findLists();
+      
+    })
+    .catch(function (err) {
+      console.log(err);
     });
-  }).catch(function(err){
-    console.log(err);
-  });
 
   app.post("/", function (req, res) {
     const newItem = req.body.newItem;
