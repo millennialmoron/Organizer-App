@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
@@ -9,13 +9,16 @@ const client = axios.create({ baseURL: "http://localhost:3000" });
 function App() {
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    async function getItems() {
-      const response = await client.get("/");
-      console.log(response.data);
+  async function getItems() {
+    try {
+      const response = await axios.get(client);
+      setItems({ name: response.data.name });
+    } catch (err) {
+      console.log(err);
     }
-    getItems();
-  });
+  }
+
+  getItems();
 
   function addItem(newItem) {
     let index = 0;

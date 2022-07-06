@@ -3,12 +3,15 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const https = require("https");
 const axios = require("axios").default;
+const cors = require("cors");
 
 const app = express();
 const pword = "coffee247";
+app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(cors());
 
 main().catch((err) => console.log(err));
 
@@ -49,39 +52,44 @@ async function main() {
 
   let defaultItems = [item1, item2, item3];
 
-  function findLists(){
-    Item.find({},function (err, itemsList) {
-        if (err) {
-          console.log(err);
-        } else {
-          if (itemsList.length === 0) {
-            Item.insertMany(defaultItems, function (err) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("yes master.");
-              }
-            });
-          }
+  function findLists() {
+    Item.find({}, function (err, itemsList) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (itemsList.length === 0) {
+          Item.insertMany(defaultItems, function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("yes master.");
+            }
+          });
         }
-        defaultItems = itemsList;
-      });
-      console.log(defaultItems);
+      }
+      defaultItems = itemsList;
+    });
+    console.log(defaultItems);
   }
 
   axios
     .get("http://localhost:3000")
-    .then(function (res) {
-      console.log(res.data);
-
+    .then(function (req) {
+      console.log(req.data);
       findLists();
-      
+      let res = defaultItems;
+      return res;
     })
     .catch(function (err) {
       console.log(err);
     });
 
-  app.post("/", function (req, res) {
+  // app.get("http://localhost:3000", function (req, res) {
+  //   findLists();
+  //   return res.send({ name: defaultItems.name });
+  // });
+
+  app.post("http://localhost:3000", function (req, res) {
     const newItem = req.body.newItem;
     const id = req.body.id;
     const item = new Item();
@@ -90,7 +98,7 @@ async function main() {
     item.save();
   });
 
-  app.post("/delete", function (req, res) {
+  app.post("http://localhost:3000/delete", function (req, res) {
     const checkedItemId = req.body.id;
     Item.deleteOne({ _id: checkedItemId }, function (err) {
       if (err) {
