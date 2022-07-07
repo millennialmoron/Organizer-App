@@ -69,6 +69,9 @@ async function main() {
       }
       defaultItems = itemsList;
     });
+    // for (var i = 0; i <= defaultItems.length; i++){
+    //   const sendItemList = defaultItems.map(item => ({name: defaultItems[i].name}));
+    // }
     console.log(defaultItems);
   }
 
@@ -84,12 +87,12 @@ async function main() {
       console.log(err);
     });
 
-  // app.get("http://localhost:3000", function (req, res) {
-  //   findLists();
-  //   return res.send({ name: defaultItems.name });
-  // });
+  app.get("/", function (req, res) {
+    findLists();
+    return res.send({data: defaultItems});
+  });
 
-  app.post("http://localhost:3000", function (req, res) {
+  app.post("/", function (req, res) {
     const newItem = req.body.newItem;
     const id = req.body.id;
     const item = new Item();
@@ -98,7 +101,7 @@ async function main() {
     item.save();
   });
 
-  app.post("http://localhost:3000/delete", function (req, res) {
+  app.post("/delete", function (req, res) {
     const checkedItemId = req.body.id;
     Item.deleteOne({ _id: checkedItemId }, function (err) {
       if (err) {

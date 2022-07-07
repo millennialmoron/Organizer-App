@@ -4,21 +4,16 @@ import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
 
-const client = axios.create({ baseURL: "http://localhost:3000" });
-
 function App() {
   const [items, setItems] = useState([]);
 
-  async function getItems() {
-    try {
-      const response = await axios.get(client);
-      setItems({ name: response.data.name });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  getItems();
+  axios.get("http://localhost:8000").then(function(response){
+  let itemListArray = Object.values(response.data);  
+  console.log(itemListArray);
+    
+  }).catch(function(err){
+    console.log(err);
+  });
 
   function addItem(newItem) {
     let index = 0;
@@ -36,7 +31,7 @@ function App() {
   }
 
   async function deleteItem(id) {
-    await client.delete("/delete", { id: id });
+    await axios.delete("/delete", { id: id });
     alert("item deleted!");
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {
@@ -54,7 +49,7 @@ function App() {
         <NewToDo onAdd={addItem} />
         <div>
           <ul>
-            {items.map((todoItem, index) => (
+            {[items].map((todoItem, index) => (
               <ToDoItem
                 key={index}
                 id={index}
