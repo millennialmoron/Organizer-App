@@ -72,16 +72,12 @@ async function main() {
     // for (var i = 0; i <= defaultItems.length; i++){
     //   const sendItemList = defaultItems.map(item => ({name: defaultItems[i].name}));
     // }
-    console.log(defaultItems);
   }
 
   axios
     .get("http://localhost:3000")
     .then(function (req) {
       console.log(req.data);
-      findLists();
-      let res = defaultItems;
-      return res;
     })
     .catch(function (err) {
       console.log(err);
@@ -89,7 +85,7 @@ async function main() {
 
   app.get("/", function (req, res) {
     findLists();
-    return res.send({data: defaultItems});
+    return res.send({ data: defaultItems });
   });
 
   app.post("/", function (req, res) {

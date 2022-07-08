@@ -4,16 +4,24 @@ import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
 
-function App() {
+export default function App() {
   const [items, setItems] = useState([]);
+  //next goal: add a state for the <li> to see if true/false if/else setup can rerender the list until complete!
 
-  axios.get("http://localhost:8000").then(function(response){
-  let itemListArray = Object.values(response.data);  
-  console.log(itemListArray);
-    
-  }).catch(function(err){
-    console.log(err);
-  });
+  axios
+    .get("http://localhost:8000")
+    .then(function (response) {
+      let savedList = response.data.data;
+      let userToDo = [];
+      for (var i = 0; i < savedList.length; i++) {
+        userToDo.push(savedList[i].name);
+      }
+      console.log(userToDo);
+      setItems(...userToDo);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 
   function addItem(newItem) {
     let index = 0;
@@ -63,5 +71,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
