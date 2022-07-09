@@ -1,11 +1,11 @@
 export function ToDoItem(props) {
   return (
-    <div
+    <li
       onClick={() => {
         props.onChecked(props.id);
       }}
     >
-      <li>{props.text}</li>
-    </div>
+      {props.text}
+    </li>
   );
 }

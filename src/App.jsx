@@ -6,18 +6,17 @@ import { ToDoItem } from "./components/ToDoItem";
 
 export default function App() {
   const [items, setItems] = useState([]);
+  const [isDone, setDone] = useState(false);
   //next goal: add a state for the <li> to see if true/false if/else setup can rerender the list until complete!
 
   axios
     .get("http://localhost:8000")
     .then(function (response) {
       let savedList = response.data.data;
-      let userToDo = [];
-      for (var i = 0; i < savedList.length; i++) {
-        userToDo.push(savedList[i].name);
-      }
-      console.log(userToDo);
-      setItems(...userToDo);
+      let userToDo = savedList.map((note) => {
+        return note.name;
+      });
+      setItems([...userToDo]);
     })
     .catch(function (err) {
       console.log(err);
@@ -57,11 +56,11 @@ export default function App() {
         <NewToDo onAdd={addItem} />
         <div>
           <ul>
-            {[items].map((todoItem, index) => (
+            {[items].map((item, index) => (
               <ToDoItem
                 key={index}
                 id={index}
-                text={todoItem}
+                text={item}
                 onChecked={deleteItem}
               />
             ))}

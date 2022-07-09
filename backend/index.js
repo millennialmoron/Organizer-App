@@ -69,15 +69,12 @@ async function main() {
       }
       defaultItems = itemsList;
     });
-    // for (var i = 0; i <= defaultItems.length; i++){
-    //   const sendItemList = defaultItems.map(item => ({name: defaultItems[i].name}));
-    // }
   }
 
   axios
     .get("http://localhost:3000")
     .then(function (req) {
-      console.log(req.data);
+      console.log("Success");
     })
     .catch(function (err) {
       console.log(err);
