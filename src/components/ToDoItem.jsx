@@ -1,11 +1,12 @@
 export function ToDoItem(props) {
-  return (
+  return props.items.map((item, index) => (
     <li
+      key={index}
       onClick={() => {
-        props.onChecked(props.id);
+        props.onChecked(index);
       }}
     >
-      {props.text}
+      {item}
     </li>
-  );
+  ));
 }
