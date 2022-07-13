@@ -90,8 +90,6 @@ async function main() {
   app.post("/", function (req, res) {
     const newItem = req.body.name;
     const id = req.body.id;
-
-    // console.log(newItem + " and " + id);
     const item = new Item();
     item.name = newItem;
     item._id = id;

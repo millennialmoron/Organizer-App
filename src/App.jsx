@@ -26,26 +26,21 @@ export default function App() {
     .then(function () {});
 
   function addItem(newItem) {
-    let index = 0;
-    if (items.length == null) {
-      index = 0;
-    } else {
-      index = items.length - 1;
-    }
-    console.log(newItem);
+    setItems((prevItems) => {
+      return [...prevItems, newItem];
+    });
+    let index = items.length;
     axios
       .post("http://localhost:8000", { name: newItem, id: index })
       .then((response) => {
         console.log(response);
       });
-    setItems((prevItems) => {
-      return [...prevItems, newItem];
-    });
   }
 
-  async function deleteItem(id) {
-    await axios.delete("/delete", { id: id });
-    alert("item deleted!");
+  function deleteItem(id) {
+    axios.post("http://localhost:8000/delete", { id: id }).then((response) => {
+      console.log(response);
+    });
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {
         return index !== id;
@@ -66,6 +61,7 @@ export default function App() {
           </ul>
         </div>
       </div>
+      {console.log(items)}
     </div>
   );
 }
