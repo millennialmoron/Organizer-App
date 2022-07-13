@@ -32,9 +32,12 @@ export default function App() {
     } else {
       index = items.length - 1;
     }
-    axios.post("/", { name: newItem, id: index }).then((response) => {
-      console.log(response);
-    });
+    console.log(newItem);
+    axios
+      .post("http://localhost:8000", { name: newItem, id: index })
+      .then((response) => {
+        console.log(response);
+      });
     setItems((prevItems) => {
       return [...prevItems, newItem];
     });

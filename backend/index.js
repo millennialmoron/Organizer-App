@@ -8,7 +8,7 @@ const cors = require("cors");
 const app = express();
 const pword = "coffee247";
 app.set("view engine", "ejs");
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cors());
@@ -66,8 +66,10 @@ async function main() {
             }
           });
         }
+        defaultItems = itemsList;
+
+        // console.log(defaultItems);
       }
-      defaultItems = itemsList;
     });
   }
 
@@ -86,12 +88,15 @@ async function main() {
   });
 
   app.post("/", function (req, res) {
-    const newItem = req.body.newItem;
+    const newItem = req.body.name;
     const id = req.body.id;
+
+    // console.log(newItem + " and " + id);
     const item = new Item();
     item.name = newItem;
     item._id = id;
     item.save();
+    return "Success";
   });
 
   app.post("/delete", function (req, res) {
