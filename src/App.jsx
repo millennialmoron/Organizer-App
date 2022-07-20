@@ -3,11 +3,20 @@ import axios from "axios";
 import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
+import { Weather } from "./components/Weather";
 
 export default function App() {
   const [items, setItems] = useState([]);
+  const [weather, setWeather] = useState({
+    location: "",
+    forecast: "",
+    currentTemp: "",
+    feltTemp: "",
+    imgSrc: "",
+  });
+  const [checkWeather, setCheckWeather] = useState(true);
   // const [isDone, setDone] = useState(false);
-  //next goal: get the addItem/post and deleteItem/post functions operational
+  //next goal: add in weather api structure in backend and component and work towards functionality.
 
   axios
     .get("http://localhost:8000")
@@ -18,6 +27,25 @@ export default function App() {
           return note.name;
         });
         setItems([...userToDo]);
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    })
+    .then(function () {});
+
+  axios
+    .get("http://localhost:8000/weather")
+    .then(function (response) {
+      if (checkWeather) {
+        setWeather({
+          location: response.data.data.location,
+          forecast: response.data.data.forecast,
+          currentTemp: response.data.data.currentTemp,
+          feltTemp: response.data.data.feltTemp,
+          imgSrc: response.data.data.imgSrc,
+        });
+        setCheckWeather(false);
       }
     })
     .catch(function (err) {
@@ -53,12 +81,23 @@ export default function App() {
       <div className="box">
         <Greeting />
       </div>
-      <div className="box">
-        <NewToDo onAdd={addItem} />
-        <div>
-          <ul>
-            <ToDoItem items={items} onChecked={deleteItem} />
-          </ul>
+      <div className="row align-items-center">
+        <div className="col-md-4 box">
+          <Weather
+            location={weather.location}
+            forecast={weather.forecast}
+            currentTemp={weather.currentTemp}
+            feltTemp={weather.feltTemp}
+            imgSrc={weather.imgSrc}
+          />
+        </div>
+        <div className="col-md-4 box">
+          <NewToDo onAdd={addItem} />
+          <div>
+            <ul>
+              <ToDoItem items={items} onChecked={deleteItem} />
+            </ul>
+          </div>
         </div>
       </div>
       {console.log(items)}

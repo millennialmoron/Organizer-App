@@ -7,6 +7,21 @@ const cors = require("cors");
 
 const app = express();
 const pword = "coffee247";
+let query = "New York City";
+const apiKey = "87c090d2a5bd172a0fae59a5f09436e7";
+const units = "metric";
+let descr = "";
+let temp = 0;
+let felt = 0;
+let imgURL = "";
+let weather = {
+  location: "",
+  forecast: "",
+  currentTemp: "",
+  feltTemp: "",
+  imgSrc: "",
+};
+
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,6 +88,35 @@ async function main() {
     });
   }
 
+  function getWeather() {
+    const url =
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      query +
+      "&appid=" +
+      apiKey +
+      "&units=" +
+      units;
+
+    https.get(url, function (response) {
+      response.on("data", function (data) {
+        const weatherData = JSON.parse(data);
+        temp = Math.round(weatherData.main.temp);
+        felt = Math.round(weatherData.main.feels_like);
+        descr = weatherData.weather[0].description;
+        var icon = weatherData.weather[0].icon;
+        imgURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+        console.log(descr);
+      });
+      weather = {
+        location: query,
+        forecast: descr,
+        currentTemp: temp,
+        feltTemp: felt,
+        imgSrc: imgURL,
+      };
+    });
+  }
+
   axios
     .get("http://localhost:3000")
     .then(function (req) {
@@ -85,6 +129,11 @@ async function main() {
   app.get("/", function (req, res) {
     findLists();
     return res.send({ data: defaultItems });
+  });
+
+  app.get("/weather", function (req, res) {
+    getWeather();
+    return res.send({ data: weather });
   });
 
   app.post("/", function (req, res) {
