@@ -100,7 +100,6 @@ export default function App() {
           </div>
         </div>
       </div>
-      {console.log(items)}
     </div>
   );
 }

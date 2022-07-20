@@ -23,9 +23,9 @@ export function Weather(props) {
       <p>The temperature is currently {props.currentTemp} Celsius,</p>
       <p>and it feels like {props.feltTemp} Celsius.</p>
       <img src={props.imgSrc} alt="today's weather" />
-      <form action="/" method="post">
+      <div className="form">
         <p>Get your local weather for today!</p>
-        <label for="cityInput">Input your city:</label>
+        <label htmlFor="cityInput">Input your city:</label>
         <input
           onChange={handleChange}
           id="cityInput"
@@ -38,7 +38,7 @@ export function Weather(props) {
         <button className="btn" onClick={handleClick}>
           ➜
         </button>
-      </form>
+      </div>
     </div>
   );
 }
