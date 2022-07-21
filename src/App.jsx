@@ -15,8 +15,16 @@ export default function App() {
     imgSrc: "",
   });
   const [checkWeather, setCheckWeather] = useState(true);
-  // const [isDone, setDone] = useState(false);
-  //next goal: add in weather api structure in backend and component and work towards functionality.
+  const [inputText, setInputText] = useState("");
+  let query = "New York City";
+  const units = "metric";
+  let temp = 0;
+  let felt = 0;
+  let descr = "";
+  let imgURL = "";
+  let apiKey = "";
+
+  //next step goals: (CURRENT) get quote display showing... (LATER) save most recently searched city in db so server can send it at the start each time
 
   axios
     .get("http://localhost:8000")
@@ -37,21 +45,59 @@ export default function App() {
   axios
     .get("http://localhost:8000/weather")
     .then(function (response) {
+      apiKey = response.data.data;
       if (checkWeather) {
-        setWeather({
-          location: response.data.data.location,
-          forecast: response.data.data.forecast,
-          currentTemp: response.data.data.currentTemp,
-          feltTemp: response.data.data.feltTemp,
-          imgSrc: response.data.data.imgSrc,
-        });
+        getWeather(query);
+        console.log("did it");
         setCheckWeather(false);
       }
     })
     .catch(function (err) {
       console.log(err);
-    })
-    .then(function () {});
+    });
+
+  function handleChange(event) {
+    const newValue = event.target.value;
+    setInputText(newValue);
+  }
+
+  function getWeather(city) {
+    const url =
+      "https://api.openweathermap.org/data/2.5/weather?q=" +
+      city +
+      "&appid=" +
+      apiKey +
+      "&units=" +
+      units;
+
+    fetch(url).then(async (response) => {
+      const weatherData = await response.json();
+      if (!response.ok) {
+        const error = weatherData && weatherData.message;
+        return Promise.reject(error);
+      }
+
+      temp = Math.round(weatherData.main.temp);
+      felt = Math.round(weatherData.main.feels_like);
+      descr = weatherData.weather[0].description;
+      var icon = weatherData.weather[0].icon;
+      imgURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+      setWeather({
+        location: city,
+        forecast: descr,
+        currentTemp: temp,
+        feltTemp: felt,
+        imgSrc: imgURL,
+      });
+      //this always shows one search result behind in the console, but the actual displayed information should be accurate now.
+      console.log(weather);
+    });
+  }
+
+  function handleClick() {
+    getWeather(inputText);
+    setInputText("");
+  }
 
   function addItem(newItem) {
     setItems((prevItems) => {
@@ -84,11 +130,14 @@ export default function App() {
       <div className="row align-items-center">
         <div className="col-md-4 box">
           <Weather
+            whenChanged={handleChange}
+            whenClicked={handleClick}
             location={weather.location}
             forecast={weather.forecast}
             currentTemp={weather.currentTemp}
             feltTemp={weather.feltTemp}
             imgSrc={weather.imgSrc}
+            inputValue={inputText}
           />
         </div>
         <div className="col-md-4 box">

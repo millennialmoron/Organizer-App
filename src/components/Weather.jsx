@@ -1,18 +1,4 @@
-import { useState } from "react";
-
 export function Weather(props) {
-  const [inputText, setInputText] = useState("");
-
-  function handleChange(event) {
-    const newValue = event.target.value;
-    setInputText(newValue);
-  }
-
-  function handleClick(event) {
-    props.onAdd(inputText);
-    setInputText("");
-    event.preventDefault();
-  }
   return (
     <div>
       <h3>Today's Weather:</h3>
@@ -27,15 +13,15 @@ export function Weather(props) {
         <p>Get your local weather for today!</p>
         <label htmlFor="cityInput">Input your city:</label>
         <input
-          onChange={handleChange}
+          onChange={props.whenChanged}
           id="cityInput"
           type="text"
           name="cityName"
           className="form-control form-control-lg"
           placeholder="City Name"
-          value={inputText}
+          value={props.inputValue}
         />
-        <button className="btn" onClick={handleClick}>
+        <button className="btn" onClick={props.whenClicked}>
           ➜
         </button>
       </div>
