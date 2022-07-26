@@ -4,6 +4,7 @@ import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
 import { Weather } from "./components/Weather";
+import { Quotes } from "./components/Quotes";
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -16,6 +17,11 @@ export default function App() {
   });
   const [checkWeather, setCheckWeather] = useState(true);
   const [inputText, setInputText] = useState("");
+  const [quote, setQuote] = useState({
+    quote: "",
+    author: "",
+  });
+  const [checkQuote, setCheckQuote] = useState(true);
   let query = "New York City";
   const units = "metric";
   let temp = 0;
@@ -50,6 +56,25 @@ export default function App() {
         getWeather(query);
         console.log("did it");
         setCheckWeather(false);
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+  //Possibly need a different quote generator as this one has too low of a daily request counter.
+  axios
+    .get("http://localhost:8000/quote")
+    .then(function (response) {
+      console.log(response);
+      let todaysQuote = response.data.data.quote;
+      let todaysAuthor = response.data.data.author;
+      if (checkQuote) {
+        setQuote({
+          quote: todaysQuote,
+          author: todaysAuthor,
+        });
+        setCheckQuote(false);
       }
     })
     .catch(function (err) {
@@ -147,6 +172,9 @@ export default function App() {
               <ToDoItem items={items} onChecked={deleteItem} />
             </ul>
           </div>
+        </div>
+        <div className="col-md-4 box">
+          <Quotes quote={quote.quote} author={quote.author} />
         </div>
       </div>
     </div>

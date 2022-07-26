@@ -8,6 +8,11 @@ const cors = require("cors");
 const app = express();
 const pword = "coffee247";
 const apiKey = "87c090d2a5bd172a0fae59a5f09436e7";
+const quoteAPI = "1e6a5c98439a8134acb203979ad63b33aa3257bd";
+let quote = {
+  quote: "",
+  author: "",
+};
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -75,34 +80,19 @@ async function main() {
     });
   }
 
-  // function getWeather(city) {
-  //   const url =
-  //     "https://api.openweathermap.org/data/2.5/weather?q=" +
-  //     city +
-  //     "&appid=" +
-  //     apiKey +
-  //     "&units=" +
-  //     units;
-
-  //   https.get(url, function (response) {
-  //     response.on("data", function (data) {
-  //       const weatherData = JSON.parse(data);
-  //       temp = Math.round(weatherData.main.temp);
-  //       felt = Math.round(weatherData.main.feels_like);
-  //       descr = weatherData.weather[0].description;
-  //       var icon = weatherData.weather[0].icon;
-  //       imgURL = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
-  //       console.log(descr);
-  //     });
-  //     weather = {
-  //       location: city,
-  //       forecast: descr,
-  //       currentTemp: temp,
-  //       feltTemp: felt,
-  //       imgSrc: imgURL,
-  //     };
-  //   });
-  // }
+  function getQuote() {
+    const quoteURL = "https://zenquotes.io/api/today/" + quoteAPI;
+    https.get(quoteURL, function (response) {
+      response.on("data", function (data) {
+        const quoteData = JSON.parse(data);
+        quote = {
+          quote: quoteData[0].q,
+          author: quoteData[0].a,
+        };
+        console.log(quote);
+      });
+    });
+  }
 
   app.get("/", function (req, res) {
     findLists();
@@ -111,6 +101,11 @@ async function main() {
 
   app.get("/weather", function (req, res) {
     return res.send({ data: apiKey });
+  });
+
+  app.get("/quote", function (req, res) {
+    getQuote();
+    return res.send({ data: quote });
   });
 
   app.post("/", function (req, res) {
@@ -122,13 +117,6 @@ async function main() {
     item.save();
     return "Success";
   });
-
-  // app.post("/weather", function (req, res) {
-  //   query = req.body.query;
-  //   getWeather(query);
-  //   console.log(query + " and " + weather.currentTemp);
-  //   return res.send({ data: weather });
-  // });
 
   app.post("/delete", function (req, res) {
     const checkedItemId = req.body.id;
