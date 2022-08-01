@@ -7,7 +7,7 @@ export function ToDoInput(props) {
         value={props.inputValue}
       />
       <button className="btn" onClick={props.whenClicked}>
-        <span>Add</span>
+        +
       </button>
     </div>
   );

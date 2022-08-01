@@ -3,8 +3,7 @@ export function Weather(props) {
     <div className="box">
       <h3>Today's Weather:</h3>
       <p>
-        The weather today in <em> {props.location} </em> is forecast to be:
-        {props.forecast}.
+        The current weather in <em> {props.location} </em> is: {props.forecast}.
       </p>
       <p>The temperature is currently {props.currentTemp} Celsius,</p>
       <p>and it feels like {props.feltTemp} Celsius.</p>

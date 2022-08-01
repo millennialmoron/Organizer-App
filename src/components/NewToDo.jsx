@@ -18,7 +18,7 @@ export function NewToDo(props) {
   return (
     <div className="container">
       <div className="heading">
-        <h1>To-Do List</h1>
+        <h3>To-Do List</h3>
       </div>
       <ToDoInput
         whenChanged={handleChange}

@@ -166,9 +166,6 @@ export default function App() {
 
   return (
     <div>
-      <div className="box">
-        <Greeting />
-      </div>
       <div className="row align-items-center">
         <div className="col-md-4">
           <Weather
@@ -182,12 +179,17 @@ export default function App() {
             inputValue={inputText}
           />
         </div>
-        <div className="col-md-4 box">
-          <NewToDo onAdd={addItem} />
-          <div>
-            <ul>
-              <ToDoItem items={items} onChecked={deleteItem} />
-            </ul>
+        <div className="col-md-4">
+          <div className="titleBox">
+            <Greeting />
+          </div>
+          <div className="box">
+            <NewToDo onAdd={addItem} />
+            <div>
+              <ul>
+                <ToDoItem items={items} onChecked={deleteItem} />
+              </ul>
+            </div>
           </div>
         </div>
         <div className="col-md-4">

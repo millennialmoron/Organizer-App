@@ -29,8 +29,8 @@ export function Greeting() {
 
   return (
     <div>
-      <h2>Good {timeOfDay}!</h2>
-      <h1>{day}</h1>
+      <h2 className="greeting">Good {timeOfDay}!</h2>
+      <h1 className="date">{day}</h1>
     </div>
   );
 }
