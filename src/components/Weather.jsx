@@ -1,6 +1,6 @@
 export function Weather(props) {
   return (
-    <div>
+    <div className="box">
       <h3>Today's Weather:</h3>
       <p>
         The weather today in <em> {props.location} </em> is forecast to be:

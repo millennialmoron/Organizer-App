@@ -5,6 +5,7 @@ import { NewToDo } from "./components/NewToDo";
 import { ToDoItem } from "./components/ToDoItem";
 import { Weather } from "./components/Weather";
 import { Quotes } from "./components/Quotes";
+import { Meme } from "./components/Meme";
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -22,6 +23,8 @@ export default function App() {
     author: "",
   });
   const [checkQuote, setCheckQuote] = useState(true);
+  const [memeURL, setMemeURL] = useState("");
+  const [checkMeme, setCheckMeme] = useState(true);
   let query = "New York City";
   const units = "metric";
   let temp = 0;
@@ -30,7 +33,7 @@ export default function App() {
   let imgURL = "";
   let apiKey = "";
 
-  //next step goals: (CURRENT) get quote display showing... (LATER) save most recently searched city in db so server can send it at the start each time
+  //next step goals: (CURRENT) figure out final box/component (LATER) save most recently searched city in db so server can send it at the start each time
 
   axios
     .get("http://localhost:8000")
@@ -66,7 +69,7 @@ export default function App() {
   axios
     .get("http://localhost:8000/quote")
     .then(function (response) {
-      console.log(response);
+      // console.log(response);
       let todaysQuote = response.data.data.quote;
       let todaysAuthor = response.data.data.author;
       if (checkQuote) {
@@ -75,6 +78,20 @@ export default function App() {
           author: todaysAuthor,
         });
         setCheckQuote(false);
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+  axios
+    .get("http://localhost:8000/meme")
+    .then(function (response) {
+      // console.log(response);
+      let newURL = response.data.data;
+      if (checkMeme) {
+        setMemeURL(newURL);
+        setCheckMeme(false);
       }
     })
     .catch(function (err) {
@@ -115,7 +132,7 @@ export default function App() {
         imgSrc: imgURL,
       });
       //this always shows one search result behind in the console, but the actual displayed information should be accurate now.
-      console.log(weather);
+      // console.log(weather);
     });
   }
 
@@ -153,7 +170,7 @@ export default function App() {
         <Greeting />
       </div>
       <div className="row align-items-center">
-        <div className="col-md-4 box">
+        <div className="col-md-4">
           <Weather
             whenChanged={handleChange}
             whenClicked={handleClick}
@@ -173,8 +190,13 @@ export default function App() {
             </ul>
           </div>
         </div>
-        <div className="col-md-4 box">
-          <Quotes quote={quote.quote} author={quote.author} />
+        <div className="col-md-4">
+          <div className="box">
+            <Quotes quote={quote.quote} author={quote.author} />
+          </div>
+          <div className="box">
+            <Meme imgSrc={memeURL} />
+          </div>
         </div>
       </div>
     </div>

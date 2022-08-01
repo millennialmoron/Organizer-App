@@ -13,6 +13,9 @@ let quote = {
   quote: "",
   author: "",
 };
+const memeAPI = "2ba5034682c441f1bb5c25caaa40f8ef";
+let memeURL = "";
+let memeYet = true;
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -89,9 +92,20 @@ async function main() {
           quote: quoteData[0].q,
           author: quoteData[0].a,
         };
-        console.log(quote);
+        // console.log(quote);
       });
     });
+  }
+
+  function getMeme() {
+    const url = "https://api.humorapi.com/memes/random?api-key=" + memeAPI;
+    https.get(url, function (response) {
+      response.on("data", function (data) {
+        const memeData = JSON.parse(data);
+        memeURL = memeData.url;
+      });
+    });
+    return memeURL;
   }
 
   app.get("/", function (req, res) {
@@ -106,6 +120,14 @@ async function main() {
   app.get("/quote", function (req, res) {
     getQuote();
     return res.send({ data: quote });
+  });
+
+  app.get("/meme", function (req, res) {
+    if (memeYet) {
+      getMeme();
+      memeYet = false;
+    }
+    return res.send({ data: memeURL });
   });
 
   app.post("/", function (req, res) {
