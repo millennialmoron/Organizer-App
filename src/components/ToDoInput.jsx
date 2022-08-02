@@ -5,9 +5,10 @@ export function ToDoInput(props) {
         onChange={props.whenChanged}
         type="text"
         value={props.inputValue}
+        placeholder="Add New Item"
       />
       <button className="btn" onClick={props.whenClicked}>
-        +
+        ⨮
       </button>
     </div>
   );

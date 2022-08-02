@@ -38,10 +38,6 @@ img {
   max-width: 200px;
 }
 
-.container-fluid {
-  padding: 3%;
-}
-
 .box {
   max-width: 400px;
   margin: 50px auto;
@@ -74,15 +70,6 @@ input {
   *overflow: hidden;
 }
 
-span {
-  margin: 0;
-  padding: 20px;
-  font-size: 20px;
-  font-weight: 200;
-  color: #00204a;
-  text-align: center;
-}
-
 form {
   text-align: center;
 }
@@ -103,13 +90,10 @@ form {
 input[type="text"] {
   text-align: center;
   border: none;
-  background: transparent;
-  font-weight: 200;
-}
-
-input[type="text"]:focus {
   outline: none;
   box-shadow: inset 0 -3px 0 0 #f1d00a;
+  background: transparent;
+  font-weight: 200;
 }
 
 ::placeholder {
