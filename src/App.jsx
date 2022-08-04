@@ -36,7 +36,18 @@ export default function App() {
   //next step goals: (CURRENT) figure out final box/component (LATER) save most recently searched city in db so server can send it at the start each time
 
   axios
-    .get("http://localhost:8000")
+    .get("http://localhost:8000/")
+    .then(function (response) {
+      if (response.ok) {
+        return "Success!";
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+  axios
+    .get("http://localhost:8000/main")
     .then(function (response) {
       if (items.length === 0) {
         let savedList = response.data.data;
@@ -52,7 +63,7 @@ export default function App() {
     .then(function () {});
 
   axios
-    .get("http://localhost:8000/weather")
+    .get("http://localhost:8000/weather/")
     .then(function (response) {
       apiKey = response.data.data;
       if (checkWeather) {
@@ -147,7 +158,7 @@ export default function App() {
     });
     let index = items.length;
     axios
-      .post("http://localhost:8000", { name: newItem, id: index })
+      .post("http://localhost:8000/main", { name: newItem, id: index })
       .then((response) => {
         console.log(response);
       });

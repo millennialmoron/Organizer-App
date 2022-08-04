@@ -4,24 +4,40 @@ const mongoose = require("mongoose");
 const https = require("https");
 const axios = require("axios").default;
 const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const findOrCreate = require("mongoose-findorcreate");
+require("dotenv").config();
 
 const app = express();
-const pword = "coffee247";
-const apiKey = "87c090d2a5bd172a0fae59a5f09436e7";
-const quoteAPI = "1e6a5c98439a8134acb203979ad63b33aa3257bd";
+const pword = process.env.MONGO_PWORD;
+const apiKey = process.env.WEATHER_API;
+const quoteAPI = process.env.QUOTE_API;
 let quote = {
   quote: "",
   author: "",
 };
-const memeAPI = "2ba5034682c441f1bb5c25caaa40f8ef";
+const memeAPI = process.env.MEME_API;
 let memeURL = "";
 let memeYet = true;
+let sessionName = "";
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cors());
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 main().catch((err) => console.log(err));
 
@@ -35,6 +51,16 @@ async function main() {
     }
   );
 
+  const userSchema = new mongoose.Schema({
+    email: String,
+    googleID: String,
+  });
+
+  userSchema.plugin(passportLocalMongoose);
+  userSchema.plugin(findOrCreate);
+
+  const User = new mongoose.model("User", userSchema);
+
   const itemsSchema = new mongoose.Schema({
     name: {
       type: String,
@@ -44,6 +70,7 @@ async function main() {
       type: Number,
       required: true,
     },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   });
 
   const Item = mongoose.model("Item", itemsSchema);
@@ -62,8 +89,38 @@ async function main() {
 
   let defaultItems = [item1, item2, item3];
 
+  passport.use(User.createStrategy());
+
+  passport.serializeUser(function (user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
+      done(err, user);
+    });
+  });
+
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: "http://localhost:8000/auth/google/main",
+      },
+      function (accessToken, refreshToken, profile, cb) {
+        console.log(profile);
+
+        User.findOrCreate({ googleID: profile.id }, function (err, user) {
+          sessionName = user.email;
+          return cb(err, user);
+        });
+      }
+    )
+  );
+
   function findLists() {
-    Item.find({}, function (err, itemsList) {
+    Item.findOne({ googleID: sessionName }, function (err, itemsList) {
       if (err) {
         console.log(err);
       } else {
@@ -74,6 +131,12 @@ async function main() {
             } else {
               console.log("yes master.");
             }
+            Item.find()
+              .populate("user")
+              .exec(function (err, item) {
+                if (err) return err;
+                console.log("The user assigned: " + Item.user.googleID);
+              });
           });
         }
         defaultItems = itemsList;
@@ -109,6 +172,24 @@ async function main() {
   }
 
   app.get("/", function (req, res) {
+    res.render("login");
+  });
+
+  app.get(
+    "/auth/google",
+    passport.authenticate("google", { scope: ["profile"] })
+  );
+
+  app.get(
+    "/auth/google/main",
+    passport.authenticate("google", { failureRedirect: "/" }),
+    function (req, res) {
+      // Successful authentication, redirect to secrets.
+      res.redirect("/main");
+    }
+  );
+
+  app.get("/main", function (req, res) {
     findLists();
     return res.send({ data: defaultItems });
   });
@@ -130,7 +211,7 @@ async function main() {
     return res.send({ data: memeURL });
   });
 
-  app.post("/", function (req, res) {
+  app.post("/main", function (req, res) {
     const newItem = req.body.name;
     const id = req.body.id;
     const item = new Item();
