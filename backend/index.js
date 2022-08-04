@@ -22,7 +22,6 @@ let quote = {
 const memeAPI = process.env.MEME_API;
 let memeURL = "";
 let memeYet = true;
-let sessionName = "";
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -53,7 +52,6 @@ async function main() {
 
   const userSchema = new mongoose.Schema({
     email: String,
-    googleID: String,
   });
 
   userSchema.plugin(passportLocalMongoose);
@@ -101,26 +99,8 @@ async function main() {
     });
   });
 
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: "http://localhost:8000/auth/google/main",
-      },
-      function (accessToken, refreshToken, profile, cb) {
-        console.log(profile);
-
-        User.findOrCreate({ googleID: profile.id }, function (err, user) {
-          sessionName = user.email;
-          return cb(err, user);
-        });
-      }
-    )
-  );
-
   function findLists() {
-    Item.findOne({ googleID: sessionName }, function (err, itemsList) {
+    Item.find({}, function (err, itemsList) {
       if (err) {
         console.log(err);
       } else {
@@ -131,12 +111,12 @@ async function main() {
             } else {
               console.log("yes master.");
             }
-            Item.find()
-              .populate("user")
-              .exec(function (err, item) {
-                if (err) return err;
-                console.log("The user assigned: " + Item.user.googleID);
-              });
+            // Item.find()
+            //   .populate("user")
+            //   .exec(function (err, item) {
+            //     if (err) return err;
+            //     console.log("The user assigned: " + Item.user.googleID);
+            //   });
           });
         }
         defaultItems = itemsList;
@@ -172,24 +152,6 @@ async function main() {
   }
 
   app.get("/", function (req, res) {
-    res.render("login");
-  });
-
-  app.get(
-    "/auth/google",
-    passport.authenticate("google", { scope: ["profile"] })
-  );
-
-  app.get(
-    "/auth/google/main",
-    passport.authenticate("google", { failureRedirect: "/" }),
-    function (req, res) {
-      // Successful authentication, redirect to secrets.
-      res.redirect("/main");
-    }
-  );
-
-  app.get("/main", function (req, res) {
     findLists();
     return res.send({ data: defaultItems });
   });
@@ -211,7 +173,7 @@ async function main() {
     return res.send({ data: memeURL });
   });
 
-  app.post("/main", function (req, res) {
+  app.post("/", function (req, res) {
     const newItem = req.body.name;
     const id = req.body.id;
     const item = new Item();
@@ -219,6 +181,22 @@ async function main() {
     item._id = id;
     item.save();
     return "Success";
+  });
+
+  app.post("/user", function (req, res) {
+    const newUser = req.body.user;
+    User.find({ email: newUser }, function (err, foundUser) {
+      if (err) {
+        console.log(err);
+      } else if (foundUser.length === 0) {
+        const user = new User();
+        user.email = newUser;
+        user.save();
+        return "Saved User";
+      } else {
+        return "Found User";
+      }
+    });
   });
 
   app.post("/delete", function (req, res) {

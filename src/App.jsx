@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Greeting } from "./components/Greeting";
 import { NewToDo } from "./components/NewToDo";
@@ -6,8 +6,10 @@ import { ToDoItem } from "./components/ToDoItem";
 import { Weather } from "./components/Weather";
 import { Quotes } from "./components/Quotes";
 import { Meme } from "./components/Meme";
+import jwt_decode from "jwt-decode";
 
 export default function App() {
+  const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
   const [weather, setWeather] = useState({
     location: "",
@@ -33,21 +35,39 @@ export default function App() {
   let imgURL = "";
   let apiKey = "";
 
-  //next step goals: (CURRENT) figure out final box/component (LATER) save most recently searched city in db so server can send it at the start each time
+  //next step goals: (CURRENT) get google login working and save user with todo list items in db...(LATER) save most recently searched city in db so server can send it at the start each time
+
+  function handleCallbackResponse(response) {
+    // console.log("Encoded JWT ID token: " + response.credential);
+    const userObject = jwt_decode(response.credential);
+    setUser(userObject);
+    saveUser();
+  }
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        "1094993871261-a0p2bbbe2t55215167an6eoll754ealg.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+  }, []);
+
+  function saveUser() {
+    axios
+      .post("http://localhost:8000/user", { user: user.email })
+      .then(function (response) {
+        console.log(response);
+      });
+  }
 
   axios
     .get("http://localhost:8000/")
-    .then(function (response) {
-      if (response.ok) {
-        return "Success!";
-      }
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-
-  axios
-    .get("http://localhost:8000/main")
     .then(function (response) {
       if (items.length === 0) {
         let savedList = response.data.data;
@@ -158,7 +178,7 @@ export default function App() {
     });
     let index = items.length;
     axios
-      .post("http://localhost:8000/main", { name: newItem, id: index })
+      .post("http://localhost:8000/", { name: newItem, id: index })
       .then((response) => {
         console.log(response);
       });
@@ -177,41 +197,44 @@ export default function App() {
 
   return (
     <div>
-      <div className="row align-items-center">
-        <div className="col-md-4">
-          <Weather
-            whenChanged={handleChange}
-            whenClicked={handleClick}
-            location={weather.location}
-            forecast={weather.forecast}
-            currentTemp={weather.currentTemp}
-            feltTemp={weather.feltTemp}
-            imgSrc={weather.imgSrc}
-            inputValue={inputText}
-          />
-        </div>
-        <div className="col-md-4">
-          <div className="titleBox">
-            <Greeting />
+      <div id="signInDiv"></div>
+      {user && (
+        <div className="row align-items-center">
+          <div className="col-md-4">
+            <Weather
+              whenChanged={handleChange}
+              whenClicked={handleClick}
+              location={weather.location}
+              forecast={weather.forecast}
+              currentTemp={weather.currentTemp}
+              feltTemp={weather.feltTemp}
+              imgSrc={weather.imgSrc}
+              inputValue={inputText}
+            />
           </div>
-          <div className="box">
-            <NewToDo onAdd={addItem} />
-            <div>
-              <ul>
-                <ToDoItem items={items} onChecked={deleteItem} />
-              </ul>
+          <div className="col-md-4">
+            <div className="titleBox">
+              <Greeting name={user.name} />
+            </div>
+            <div className="box">
+              <NewToDo onAdd={addItem} />
+              <div>
+                <ul>
+                  <ToDoItem items={items} onChecked={deleteItem} />
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="box">
+              <Quotes quote={quote.quote} author={quote.author} />
+            </div>
+            <div className="box">
+              <Meme imgSrc={memeURL} />
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="box">
-            <Quotes quote={quote.quote} author={quote.author} />
-          </div>
-          <div className="box">
-            <Meme imgSrc={memeURL} />
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

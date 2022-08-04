@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-export function Greeting() {
+export function Greeting(props) {
   //   const [timeOfDay, setTimeOfDay] = useState("");
   let timeOfDay = "";
   const today = new Date();
@@ -29,7 +29,9 @@ export function Greeting() {
 
   return (
     <div>
-      <h2 className="greeting">Good {timeOfDay}!</h2>
+      <h2 className="greeting">
+        Good {timeOfDay}, {props.name}!
+      </h2>
       <h1 className="date">{day}</h1>
     </div>
   );
