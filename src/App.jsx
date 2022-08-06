@@ -38,10 +38,13 @@ export default function App() {
   //next step goals: (CURRENT) get google login working and save user with todo list items in db...(LATER) save most recently searched city in db so server can send it at the start each time
 
   function handleCallbackResponse(response) {
-    // console.log("Encoded JWT ID token: " + response.credential);
+    //console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
+    const userEmail = userObject.email;
+    const userName = userObject.name;
+    const id = userObject.jti;
     setUser(userObject);
-    saveUser();
+    saveUser(userEmail, userName, id);
   }
 
   useEffect(() => {
@@ -58,9 +61,17 @@ export default function App() {
     });
   }, []);
 
-  function saveUser() {
+  function saveUser(email, name, id) {
+    let userEmail = email;
+    let userName = name;
+    let userID = id;
+    console.log(userEmail);
     axios
-      .post("http://localhost:8000/user", { user: user.email })
+      .post("http://localhost:8000/user", {
+        email: userEmail,
+        name: userName,
+        id: userID,
+      })
       .then(function (response) {
         console.log(response);
       });
@@ -198,6 +209,7 @@ export default function App() {
   return (
     <div>
       <div id="signInDiv"></div>
+      {/* {console.log(user)} */}
       {user && (
         <div className="row align-items-center">
           <div className="col-md-4">

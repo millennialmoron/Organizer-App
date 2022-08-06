@@ -6,9 +6,6 @@ const axios = require("axios").default;
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const findOrCreate = require("mongoose-findorcreate");
 require("dotenv").config({ path: "./vars/.env" });
 
 const app = express();
@@ -51,13 +48,12 @@ async function main() {
   );
 
   const userSchema = new mongoose.Schema({
-    email: String,
+    email: { type: String, required: true },
+    name: { type: String },
+    _id: { type: String },
   });
 
-  userSchema.plugin(passportLocalMongoose);
-  userSchema.plugin(findOrCreate);
-
-  const User = new mongoose.model("User", userSchema);
+  const User = mongoose.model("User", userSchema);
 
   const itemsSchema = new mongoose.Schema({
     name: {
@@ -68,7 +64,7 @@ async function main() {
       type: Number,
       required: true,
     },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   });
 
   const Item = mongoose.model("Item", itemsSchema);
@@ -86,18 +82,6 @@ async function main() {
   item3._id = 2;
 
   let defaultItems = [item1, item2, item3];
-
-  passport.use(User.createStrategy());
-
-  passport.serializeUser(function (user, done) {
-    done(null, user.id);
-  });
-
-  passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-      done(err, user);
-    });
-  });
 
   function findLists() {
     Item.find({}, function (err, itemsList) {
@@ -184,17 +168,28 @@ async function main() {
   });
 
   app.post("/user", function (req, res) {
-    const newUser = req.body.user;
-    User.find({ email: newUser }, function (err, foundUser) {
+    let userEmail = req.body.email;
+    let userName = req.body.name;
+    let userID = req.body.id;
+    let data = {
+      email: userEmail,
+      name: userName,
+      _id: userID,
+    };
+
+    User.find({ _id: userID }, function (err, foundUser) {
       if (err) {
         console.log(err);
       } else if (foundUser.length === 0) {
-        const user = new User();
-        user.email = newUser;
-        user.save();
-        return "Saved User";
+        var newUser = new User(data);
+        newUser.save((err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+        return "Success";
       } else {
-        return "Found User";
+        console.log(foundUser);
       }
     });
   });
