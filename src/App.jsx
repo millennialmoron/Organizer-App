@@ -35,7 +35,7 @@ export default function App() {
   let imgURL = "";
   let apiKey = "";
 
-  //next step goals: (CURRENT) get google login working and save user with todo list items in db...(LATER) save most recently searched city in db so server can send it at the start each time
+  //next step goals: (CURRENT) Get the two mongo db's to connect...(LATER) save most recently searched city in db so server can send it at the start each time
 
   function handleCallbackResponse(response) {
     //console.log("Encoded JWT ID token: " + response.credential);
