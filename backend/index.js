@@ -6,6 +6,7 @@ const axios = require("axios").default;
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
+const assert = require("assert");
 require("dotenv").config({ path: "./vars/.env" });
 
 const app = express();
@@ -19,6 +20,9 @@ let quote = {
 const memeAPI = process.env.MEME_API;
 let memeURL = "";
 let memeYet = true;
+let sessionUser = "";
+let sessionName = "";
+let defaultItems = [];
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -64,43 +68,41 @@ async function main() {
       type: Number,
       required: true,
     },
+    user: { type: String },
     // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   });
 
   const Item = mongoose.model("Item", itemsSchema);
 
-  const item1 = new Item();
-  item1.name = "Do laundry.";
-  item1._id = 0;
-
-  const item2 = new Item();
-  item2.name = "Clean the cutlery.";
-  item2._id = 1;
-
-  const item3 = new Item();
-  item3.name = "Dispose of remaining evidence.";
-  item3._id = 2;
-
-  let defaultItems = [item1, item2, item3];
-
-  function findLists() {
-    Item.find({}, function (err, itemsList) {
+  function findLists(sessionUser) {
+    Item.find({ user: sessionUser }, function (err, itemsList) {
       if (err) {
         console.log(err);
       } else {
         if (itemsList.length === 0) {
+          const item1 = new Item();
+          item1.name = "Do laundry.";
+          item1._id = 0;
+          item1.user = sessionUser;
+
+          const item2 = new Item();
+          item2.name = "Clean the cutlery.";
+          item2._id = 1;
+          item2.user = sessionUser;
+
+          const item3 = new Item();
+          item3.name = "Dispose of remaining evidence.";
+          item3._id = 2;
+          item3.user = sessionUser;
+
+          defaultItems = [item1, item2, item3];
+
           Item.insertMany(defaultItems, function (err) {
             if (err) {
               console.log(err);
             } else {
               console.log("yes master.");
             }
-            // Item.find()
-            //   .populate("user")
-            //   .exec(function (err, item) {
-            //     if (err) return err;
-            //     console.log("The user assigned: " + Item.user.googleID);
-            //   });
           });
         }
         defaultItems = itemsList;
@@ -136,8 +138,12 @@ async function main() {
   }
 
   app.get("/", function (req, res) {
-    findLists();
+    findLists(sessionUser);
     return res.send({ data: defaultItems });
+  });
+
+  app.get("/user", function (req, res) {
+    return res.send({ data: sessionName });
   });
 
   app.get("/weather", function (req, res) {
@@ -163,13 +169,16 @@ async function main() {
     const item = new Item();
     item.name = newItem;
     item._id = id;
+    item.user = sessionUser;
     item.save();
     return "Success";
   });
 
   app.post("/user", function (req, res) {
     let userEmail = req.body.email;
+    sessionUser = userEmail;
     let userName = req.body.name;
+    sessionName = userName;
     let userID = req.body.id;
     let data = {
       email: userEmail,
@@ -177,7 +186,7 @@ async function main() {
       _id: userID,
     };
 
-    User.find({ _id: userID }, function (err, foundUser) {
+    User.find({ email: userEmail }, function (err, foundUser) {
       if (err) {
         console.log(err);
       } else if (foundUser.length === 0) {
@@ -187,6 +196,25 @@ async function main() {
             console.log(err);
           }
         });
+
+        // Item.aggregate([
+        //   {
+        //     $lookup: {
+        //       from: "user",
+        //       localField: "user",
+        //       foreignField: "user",
+        //       as: "sessionUser",
+        //     },
+        //   },
+        // ]).exec((err, result) => {
+        //   if (err) {
+        //     console.log(err);
+        //   }
+        //   if (result) {
+        //     console.log(result);
+        //   }
+        // });
+
         return "Success";
       } else {
         console.log(foundUser);
