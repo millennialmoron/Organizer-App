@@ -6,7 +6,7 @@ const axios = require("axios").default;
 const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
-const assert = require("assert");
+const { v4: uuidv4 } = require("uuid");
 require("dotenv").config({ path: "./vars/.env" });
 
 const app = express();
@@ -65,11 +65,10 @@ async function main() {
       required: true,
     },
     _id: {
-      type: Number,
+      type: String,
       required: true,
     },
     user: { type: String },
-    // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   });
 
   const Item = mongoose.model("Item", itemsSchema);
@@ -82,18 +81,32 @@ async function main() {
         if (itemsList.length === 0) {
           const item1 = new Item();
           item1.name = "Do laundry.";
-          item1._id = 0;
+          item1._id = uuidv4();
           item1.user = sessionUser;
 
           const item2 = new Item();
           item2.name = "Clean the cutlery.";
-          item2._id = 1;
+          item2._id = uuidv4();
           item2.user = sessionUser;
 
           const item3 = new Item();
           item3.name = "Dispose of remaining evidence.";
-          item3._id = 2;
+          item3._id = uuidv4();
           item3.user = sessionUser;
+
+          for (var i = 0; i < itemsList.length; i++) {
+            if (item1._id === itemsList[i]._id) {
+              item1._id = uuidv4();
+            } else if (item2._id === itemsList[i]._id) {
+              item2._id = uuidv4();
+            } else if (item3._id === itemsList[i]._id) {
+              item3._id = uuidv4();
+            } else if (item1._id === item2._id || item1._id === item3._id) {
+              item1._id = uuidv4();
+            } else if (item2._id === item3._id) {
+              item2._id = uuidv4();
+            }
+          }
 
           defaultItems = [item1, item2, item3];
 
@@ -137,7 +150,7 @@ async function main() {
     return memeURL;
   }
 
-  app.get("/", function (req, res) {
+  app.get("/list", function (req, res) {
     findLists(sessionUser);
     return res.send({ data: defaultItems });
   });

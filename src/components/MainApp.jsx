@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 import { Greeting } from "./Greeting";
 import { NewToDo } from "./NewToDo";
 import { ToDoItem } from "./ToDoItem";
@@ -8,7 +9,13 @@ import { Quotes } from "./Quotes";
 import { Meme } from "./Meme";
 
 export function MainApp() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([
+    {
+      name: "",
+      id: "",
+    },
+  ]);
+  const [checkList, setCheckList] = useState(true);
   const [weather, setWeather] = useState({
     location: "",
     forecast: "",
@@ -49,20 +56,27 @@ export function MainApp() {
     });
 
   axios
-    .get("http://localhost:8000/")
+    .get("http://localhost:8000/list")
     .then(function (response) {
-      if (items.length === 0) {
+      //   console.log(response);
+      if (checkList) {
         let savedList = response.data.data;
-        let userToDo = savedList.map((note) => {
-          return note.name;
-        });
+        // console.log(savedList);
+        let userToDo = [];
+        for (var i = 0; i < savedList.length; i++) {
+          userToDo[i] = {
+            name: savedList[i].name,
+            id: savedList[i]._id,
+          };
+        }
+        // console.log(userToDo);
         setItems([...userToDo]);
+        setCheckList(false);
       }
     })
     .catch(function (err) {
       console.log(err);
-    })
-    .then(function () {});
+    });
 
   axios
     .get("http://localhost:8000/weather/")
@@ -70,7 +84,7 @@ export function MainApp() {
       apiKey = response.data.data;
       if (checkWeather) {
         getWeather(query);
-        console.log("did it");
+        // console.log("did it");
         setCheckWeather(false);
       }
     })
@@ -155,24 +169,34 @@ export function MainApp() {
   }
 
   function addItem(newItem) {
+    let id = uuidv4();
+    for (var i = 0; i < items.length; i++) {
+      if (id === items[i].id) {
+        id = uuidv4();
+      }
+    }
+    let newNote = {
+      name: newItem,
+      id: id,
+    };
     setItems((prevItems) => {
-      return [...prevItems, newItem];
+      return [...prevItems, newNote];
     });
-    let index = items.length + 1;
+
     axios
-      .post("http://localhost:8000/", { name: newItem, id: index })
+      .post("http://localhost:8000/", { name: newItem, id: id })
       .then((response) => {
         console.log(response);
       });
   }
 
-  function deleteItem(id) {
+  function deleteItem(id, count) {
     axios.post("http://localhost:8000/delete", { id: id }).then((response) => {
       console.log(response);
     });
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {
-        return index !== id;
+        return index !== count;
       });
     });
   }
