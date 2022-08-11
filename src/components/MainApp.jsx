@@ -81,7 +81,9 @@ export function MainApp() {
   axios
     .get("http://localhost:8000/weather/")
     .then(function (response) {
-      apiKey = response.data.data;
+      apiKey = response.data.data.apiKey;
+      query = response.data.data.query;
+      console.log(query);
       if (checkWeather) {
         getWeather(query);
         // console.log("did it");
@@ -158,6 +160,15 @@ export function MainApp() {
         feltTemp: felt,
         imgSrc: imgURL,
       });
+
+      axios
+        .post("http://localhost:8000/weather", { city: city })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
       //this always shows one search result behind in the console, but the actual displayed information should be accurate now.
       // console.log(weather);
     });

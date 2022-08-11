@@ -23,6 +23,7 @@ let memeYet = true;
 let sessionUser = "";
 let sessionName = "";
 let defaultItems = [];
+let query = "";
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -59,6 +60,13 @@ async function main() {
 
   const User = mongoose.model("User", userSchema);
 
+  const citySchema = new mongoose.Schema({
+    city: { type: String, required: true },
+    user: { type: String, required: true },
+  });
+
+  const City = mongoose.model("City", citySchema);
+
   const itemsSchema = new mongoose.Schema({
     name: {
       type: String,
@@ -72,6 +80,76 @@ async function main() {
   });
 
   const Item = mongoose.model("Item", itemsSchema);
+
+  app.get("/user", function (req, res) {
+    return res.send({ data: sessionName });
+  });
+
+  app.post("/user", function (req, res) {
+    let userEmail = req.body.email;
+    sessionUser = userEmail;
+    let userName = req.body.name;
+    sessionName = userName;
+    let userID = req.body.id;
+    let data = {
+      email: userEmail,
+      name: userName,
+      _id: userID,
+    };
+
+    User.find({ email: userEmail }, function (err, foundUser) {
+      if (err) {
+        console.log(err);
+      } else if (foundUser.length === 0) {
+        var newUser = new User(data);
+        newUser.save((err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+
+        Item.aggregate([
+          {
+            $lookup: {
+              from: "user",
+              localField: "user",
+              foreignField: "user",
+              as: "sessionUser",
+            },
+          },
+        ]).exec((err, result) => {
+          if (err) {
+            console.log(err);
+          }
+          if (result) {
+            console.log(result);
+          }
+        });
+
+        City.aggregate([
+          {
+            $lookup: {
+              from: "user",
+              localField: "user",
+              foreignField: "user",
+              as: "sessionUser",
+            },
+          },
+        ]).exec((err, result) => {
+          if (err) {
+            console.log(err);
+          }
+          if (result) {
+            console.log(result);
+          }
+        });
+
+        return "Success";
+      } else {
+        console.log(foundUser);
+      }
+    });
+  });
 
   function findLists(sessionUser) {
     Item.find({ user: sessionUser }, function (err, itemsList) {
@@ -150,17 +228,33 @@ async function main() {
     return memeURL;
   }
 
+  function getCity(sessionUser) {
+    City.find({ user: sessionUser }, function (err, userCity) {
+      console.log(userCity);
+      if (err) {
+        console.log(err);
+      } else if (userCity.length === 0) {
+        let newCity = new City();
+        newCity.city = "New York";
+        newCity.user = sessionUser;
+        newCity.save();
+        query = "New York";
+      } else {
+        query = userCity.city;
+      }
+    });
+
+    return query;
+  }
+
   app.get("/list", function (req, res) {
     findLists(sessionUser);
     return res.send({ data: defaultItems });
   });
 
-  app.get("/user", function (req, res) {
-    return res.send({ data: sessionName });
-  });
-
   app.get("/weather", function (req, res) {
-    return res.send({ data: apiKey });
+    getCity(sessionUser);
+    return res.send({ data: { apiKey, query } });
   });
 
   app.get("/quote", function (req, res) {
@@ -187,52 +281,21 @@ async function main() {
     return "Success";
   });
 
-  app.post("/user", function (req, res) {
-    let userEmail = req.body.email;
-    sessionUser = userEmail;
-    let userName = req.body.name;
-    sessionName = userName;
-    let userID = req.body.id;
-    let data = {
-      email: userEmail,
-      name: userName,
-      _id: userID,
-    };
-
-    User.find({ email: userEmail }, function (err, foundUser) {
-      if (err) {
-        console.log(err);
-      } else if (foundUser.length === 0) {
-        var newUser = new User(data);
-        newUser.save((err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-
-        // Item.aggregate([
-        //   {
-        //     $lookup: {
-        //       from: "user",
-        //       localField: "user",
-        //       foreignField: "user",
-        //       as: "sessionUser",
-        //     },
-        //   },
-        // ]).exec((err, result) => {
-        //   if (err) {
-        //     console.log(err);
-        //   }
-        //   if (result) {
-        //     console.log(result);
-        //   }
-        // });
-
-        return "Success";
-      } else {
-        console.log(foundUser);
+  app.post("/weather", function (req, res) {
+    let userCity = req.body.city;
+    console.log(sessionUser);
+    City.findOneAndUpdate(
+      { user: sessionUser },
+      { $set: { city: userCity, user: sessionUser } },
+      function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+        }
       }
-    });
+    );
+    return "Success";
   });
 
   app.post("/delete", function (req, res) {
