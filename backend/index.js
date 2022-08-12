@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const { MongoClient } = require("mongodb");
 const https = require("https");
 const axios = require("axios").default;
 const cors = require("cors");
@@ -40,17 +41,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-main().catch((err) => console.log(err));
-
 async function main() {
-  await mongoose.connect(
+  const uri =
     "mongodb+srv://coolbeans21:" +
-      pword +
-      "@decluttercluster.uemvy.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-    }
-  );
+    pword +
+    "@decluttercluster.uemvy.mongodb.net/?retryWrites=true&w=majority";
+
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+  } catch (e) {
+    console.error(e);
+  }
+
+  const db = client.db("test");
 
   const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
@@ -108,41 +113,45 @@ async function main() {
           }
         });
 
-        Item.aggregate([
-          {
-            $lookup: {
-              from: "user",
-              localField: "user",
-              foreignField: "user",
-              as: "sessionUser",
+        db.collection("items")
+          .aggregate([
+            {
+              $lookup: {
+                from: "user",
+                localField: "user",
+                foreignField: "user",
+                as: "sessionUser",
+              },
             },
-          },
-        ]).exec((err, result) => {
-          if (err) {
-            console.log(err);
-          }
-          if (result) {
-            console.log(result);
-          }
-        });
+          ])
+          .toArray((err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            if (result) {
+              console.log(result);
+            }
+          });
 
-        City.aggregate([
-          {
-            $lookup: {
-              from: "user",
-              localField: "user",
-              foreignField: "user",
-              as: "sessionUser",
+        db.collection("cities")
+          .aggregate([
+            {
+              $lookup: {
+                from: "user",
+                localField: "user",
+                foreignField: "user",
+                as: "sessionUser",
+              },
             },
-          },
-        ]).exec((err, result) => {
-          if (err) {
-            console.log(err);
-          }
-          if (result) {
-            console.log(result);
-          }
-        });
+          ])
+          .toArray((err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            if (result) {
+              console.log(result);
+            }
+          });
 
         return "Success";
       } else {
@@ -309,6 +318,8 @@ async function main() {
     });
   });
 }
+
+main().catch((err) => console.log(err));
 
 app.listen(8000, function () {
   console.log("what up bitches?");
