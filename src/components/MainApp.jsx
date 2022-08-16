@@ -84,11 +84,11 @@ export function MainApp(props) {
   const getCity = async () => {
     try {
       const response = await axios.get("http://localhost:8000/weather/");
-      console.log(response.data.data);
+      // console.log(response.data.data);
+      apiKey = response.data.data.apiKey;
+      query = response.data.data.query;
       if (checkWeather) {
-        apiKey = response.data.data.apiKey;
-        query = response.data.data.query;
-        console.log(query);
+        // console.log(query);
         getWeather(query);
         console.log("did it");
         setCheckWeather(false);
@@ -137,6 +137,9 @@ export function MainApp(props) {
   }
 
   function getWeather(city) {
+    // getCity();
+    // console.log(apiKey);
+    // console.log(city);
     const url =
       "https://api.openweathermap.org/data/2.5/weather?q=" +
       city +

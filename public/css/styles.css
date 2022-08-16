@@ -60,6 +60,7 @@ ul {
 }
 
 input {
+  color: #f0f0f0;
   width: 150px;
   height: 30px;
   padding: 0;
@@ -93,6 +94,7 @@ input[type="text"] {
   box-shadow: inset 0 -3px 0 0 #eeeeee;
   background: transparent;
   font-weight: 200;
+  color: #f0f0f0;
 }
 
 ::placeholder {

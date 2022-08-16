@@ -141,17 +141,17 @@ async function main() {
       } else {
         if (itemsList.length === 0) {
           const item1 = new Item();
-          item1.name = "Do laundry.";
+          item1.name = "Add new notes above.";
           item1._id = uuidv4();
           item1.user = sessionUser;
 
           const item2 = new Item();
-          item2.name = "Clean the cutlery.";
+          item2.name = "Click an item to delete it.";
           item2._id = uuidv4();
           item2.user = sessionUser;
 
           const item3 = new Item();
-          item3.name = "Dispose of remaining evidence.";
+          item3.name = "Customize your list to fit you.";
           item3._id = uuidv4();
           item3.user = sessionUser;
 
