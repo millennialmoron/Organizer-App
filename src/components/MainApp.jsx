@@ -8,7 +8,7 @@ import { Weather } from "./Weather";
 import { Quotes } from "./Quotes";
 import { Meme } from "./Meme";
 
-export function MainApp() {
+export function MainApp(props) {
   const [items, setItems] = useState([
     {
       name: "",
@@ -41,24 +41,26 @@ export function MainApp() {
   let imgURL = "";
   let apiKey = "";
 
-  axios
-    .get("http://localhost:8000/user")
-    .then(function (response) {
+  const getUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/user");
       let sessionLogin = true;
       let sessionUser = response.data.data;
       if (sessionLogin) {
         setUser(sessionUser);
         sessionLogin = false;
       }
-    })
-    .catch(function (err) {
+    } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
-  axios
-    .get("http://localhost:8000/list")
-    .then(function (response) {
-      //   console.log(response);
+  getUser();
+
+  const getLists = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/list");
+      // console.log(response.data.data);
       if (checkList) {
         let savedList = response.data.data;
         // console.log(savedList);
@@ -68,36 +70,38 @@ export function MainApp() {
             name: savedList[i].name,
             id: savedList[i]._id,
           };
+          // console.log(userToDo);
+          setItems([...userToDo]);
+          setCheckList(false);
         }
-        // console.log(userToDo);
-        setItems([...userToDo]);
-        setCheckList(false);
       }
-    })
-    .catch(function (err) {
+      // console.log(items);
+    } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
-  axios
-    .get("http://localhost:8000/weather/")
-    .then(function (response) {
-      apiKey = response.data.data.apiKey;
-      query = response.data.data.query;
-      console.log(query);
+  const getCity = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/weather/");
+      console.log(response.data.data);
       if (checkWeather) {
+        apiKey = response.data.data.apiKey;
+        query = response.data.data.query;
+        console.log(query);
         getWeather(query);
-        // console.log("did it");
+        console.log("did it");
         setCheckWeather(false);
       }
-    })
-    .catch(function (err) {
+    } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
   //Possibly need a different quote generator as this one has too low of a daily request counter.
-  axios
-    .get("http://localhost:8000/quote")
-    .then(function (response) {
+  const getQuote = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/quote");
       // console.log(response);
       let todaysQuote = response.data.data.quote;
       let todaysAuthor = response.data.data.author;
@@ -108,24 +112,24 @@ export function MainApp() {
         });
         setCheckQuote(false);
       }
-    })
-    .catch(function (err) {
+    } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
-  axios
-    .get("http://localhost:8000/meme")
-    .then(function (response) {
+  const getMeme = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/meme");
       // console.log(response);
       let newURL = response.data.data;
       if (checkMeme) {
         setMemeURL(newURL);
         setCheckMeme(false);
       }
-    })
-    .catch(function (err) {
+    } catch (err) {
       console.log(err);
-    });
+    }
+  };
 
   function handleChange(event) {
     const newValue = event.target.value;
@@ -172,6 +176,15 @@ export function MainApp() {
       //this always shows one search result behind in the console, but the actual displayed information should be accurate now.
       // console.log(weather);
     });
+  }
+
+  if (user === "") {
+    getUser();
+  } else {
+    getLists();
+    getCity();
+    getQuote();
+    getMeme();
   }
 
   function handleClick() {

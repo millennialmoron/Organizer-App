@@ -5,8 +5,6 @@ const { MongoClient } = require("mongodb");
 const https = require("https");
 const axios = require("axios").default;
 const cors = require("cors");
-const session = require("express-session");
-const passport = require("passport");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config({ path: "./vars/.env" });
 
@@ -25,21 +23,16 @@ let sessionUser = "";
 let sessionName = "";
 let defaultItems = [];
 let query = "";
+let cityData = {
+  apiKey: apiKey,
+  query: query,
+};
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cors());
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
 
 async function main() {
   const uri =
@@ -47,15 +40,9 @@ async function main() {
     pword +
     "@decluttercluster.uemvy.mongodb.net/?retryWrites=true&w=majority";
 
-  const client = new MongoClient(uri);
-
-  try {
-    await client.connect();
-  } catch (e) {
-    console.error(e);
-  }
-
-  const db = client.db("test");
+  await mongoose.connect(uri, { useNewUrlParser: true }, () => {
+    console.log("workin");
+  });
 
   const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
@@ -87,6 +74,7 @@ async function main() {
   const Item = mongoose.model("Item", itemsSchema);
 
   app.get("/user", function (req, res) {
+    console.log(sessionUser);
     return res.send({ data: sessionName });
   });
 
@@ -112,55 +100,41 @@ async function main() {
             console.log(err);
           }
         });
-
-        db.collection("items")
-          .aggregate([
-            {
-              $lookup: {
-                from: "user",
-                localField: "user",
-                foreignField: "user",
-                as: "sessionUser",
-              },
-            },
-          ])
-          .toArray((err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            if (result) {
-              console.log(result);
-            }
-          });
-
-        db.collection("cities")
-          .aggregate([
-            {
-              $lookup: {
-                from: "user",
-                localField: "user",
-                foreignField: "user",
-                as: "sessionUser",
-              },
-            },
-          ])
-          .toArray((err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            if (result) {
-              console.log(result);
-            }
-          });
-
-        return "Success";
       } else {
         console.log(foundUser);
+        findLists(sessionUser);
+        getCity(sessionUser);
+        getQuote();
       }
+
+      Item.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "user",
+            as: "sessionUser",
+          },
+        },
+      ]);
+
+      City.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "user",
+            as: "sessionUser",
+          },
+        },
+      ]);
+
+      return "Success";
     });
   });
 
   function findLists(sessionUser) {
+    // console.log("running lists..." + sessionUser);
     Item.find({ user: sessionUser }, function (err, itemsList) {
       if (err) {
         console.log(err);
@@ -206,6 +180,7 @@ async function main() {
           });
         }
         defaultItems = itemsList;
+        return defaultItems;
 
         // console.log(defaultItems);
       }
@@ -239,7 +214,6 @@ async function main() {
 
   function getCity(sessionUser) {
     City.find({ user: sessionUser }, function (err, userCity) {
-      console.log(userCity);
       if (err) {
         console.log(err);
       } else if (userCity.length === 0) {
@@ -249,25 +223,28 @@ async function main() {
         newCity.save();
         query = "New York";
       } else {
-        query = userCity.city;
+        query = userCity[0].city;
       }
+      cityData = {
+        apiKey: apiKey,
+        query: query,
+      };
+      console.log(userCity[0].city);
     });
 
-    return query;
+    return cityData;
   }
 
   app.get("/list", function (req, res) {
-    findLists(sessionUser);
     return res.send({ data: defaultItems });
   });
 
   app.get("/weather", function (req, res) {
     getCity(sessionUser);
-    return res.send({ data: { apiKey, query } });
+    return res.send({ data: cityData });
   });
 
   app.get("/quote", function (req, res) {
-    getQuote();
     return res.send({ data: quote });
   });
 
