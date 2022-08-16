@@ -47,9 +47,11 @@ export function Login(props) {
   }
 
   return (
-    <div>
-      <h2>Please Login using Google to Continue.</h2>
-      <div id="signInDiv"></div>
+    <div className="login">
+      <div className="box text-center align-items-center">
+        <h2>Please Login using Google to Continue.</h2>
+        <div id="signInDiv"></div>
+      </div>
     </div>
   );
 }
