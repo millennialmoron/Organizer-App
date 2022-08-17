@@ -238,9 +238,7 @@ async function main() {
   }
 
   app.get("*", function (req, res) {
-    res.sendFile(
-      path.join(__dirname, "./client/build", "./client/public/index.html")
-    );
+    res.sendFile(path.join(__dirname, "client/public/index.html"));
   });
 
   app.get("/list", function (req, res) {
