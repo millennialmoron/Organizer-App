@@ -32,8 +32,8 @@ let cityData = {
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.use(express.static(__dirname, "public"));
+app.use(express.static(path.resolve(__dirname, "build")));
 app.use(cors());
 
 async function main() {
@@ -238,7 +238,7 @@ async function main() {
   }
 
   app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "/public/index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
   });
 
   app.get("/list", function (req, res) {
