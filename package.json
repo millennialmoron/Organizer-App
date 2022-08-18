@@ -5,7 +5,11 @@
   "main": "server.js",
   "script": {
     "start": "node server.js",
-    "heroku-postbuild": "npm install && npm run build"
+    "heroku-postbuild": "npm install && cd src && npm run build"
+},
+"engines": {
+  "node": "^16.15.0",
+  "npm": "^8.5.5"
 },
   "proxy": "http://localhost:8000",
   "keywords": [],
