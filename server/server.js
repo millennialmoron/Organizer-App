@@ -237,7 +237,7 @@ async function main() {
   }
 
   app.get("/", function (req, res) {
-    res.sendFile("index.html", { root: __dirname + "public" });
+    res.sendFile("index.html", { root: __dirname + "/public" });
   });
 
   app.get("/list", function (req, res) {
