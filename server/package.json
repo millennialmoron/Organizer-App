@@ -5,7 +5,7 @@
   "main": "server.js",
   "script": {
     "start": "node server.js",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "npm install && npm run build"
 },
   "proxy": "http://localhost:8000",
   "keywords": [],

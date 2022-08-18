@@ -304,10 +304,6 @@ async function main() {
 
 main().catch((err) => console.log(err));
 
-let port = process.env.PORT || 8000;
-if (port == null || port == "") {
-  port = 8000;
-}
-app.listen(port, function () {
+app.listen(process.env.PORT || 8000, function () {
   console.log("what up bitches?");
 });
