@@ -236,8 +236,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/", function (req, res) {
-    res.sendFile("index.html", { root: __dirname + "/public" });
+  app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
   app.get("/list", function (req, res) {

@@ -1,0 +1,122 @@
+body {
+  background-color: #2a2438;
+  min-height: 100%;
+  font-family: "Dosis", sans-serif;
+  font-weight: 300;
+  color: #dbd8e3;
+}
+
+.date {
+  padding: 10px;
+  font-size: 2.5rem;
+  font-family: "Dosis", sans-serif;
+  font-weight: 500;
+}
+
+.greeting {
+  font-family: "Sacramento", cursive;
+  font-size: 3rem;
+  color: #dbd8e3;
+}
+
+.titleBox {
+  padding: 5%;
+  max-width: 400px;
+  margin: 50px auto;
+  background: #352f44;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+img {
+  max-width: 200px;
+}
+
+.box {
+  max-width: 400px;
+  margin: 50px auto;
+  background: #352f44;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding: 2%;
+}
+
+ul {
+  list-style: none;
+  height: auto;
+  display: block;
+  margin-left: -18px;
+}
+
+.form-check-input {
+  align-items: center;
+  font-weight: 300;
+}
+
+input {
+  color: #dbd8e3;
+  width: 150px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  *overflow: hidden;
+}
+
+form {
+  text-align: center;
+}
+
+.btn {
+  min-height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border-color: transparent;
+  background-color: #eeeeee;
+  color: #5c5470;
+  font-size: 1.5rem;
+  padding-bottom: 6px;
+  border-width: 0;
+  text-align: center;
+}
+
+input[type="text"] {
+  text-align: center;
+  border: none;
+  outline: none;
+  box-shadow: inset 0 -3px 0 0 #dbd8e3;
+  background: transparent;
+  font-weight: 200;
+  color: #dbd8e3;
+}
+
+::placeholder {
+  color: #5c5470;
+  opacity: 1;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+footer {
+  color: #dbd8e3;
+  background-color: #5c5470;
+  text-align: center;
+}
