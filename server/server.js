@@ -1,4 +1,5 @@
 const express = require("express");
+const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { MongoClient } = require("mongodb");
@@ -8,8 +9,6 @@ const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 require("dotenv").config({ path: "./vars/.env" });
-
-const app = express();
 const pword = process.env.MONGO_PWORD;
 const apiKey = process.env.WEATHER_API;
 const quoteAPI = process.env.QUOTE_API;
