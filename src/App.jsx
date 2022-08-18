@@ -9,8 +9,6 @@ export default function App(props) {
     setCheckLogin(check);
   }
 
-  //everything is working. next: publish app through heroku. also open db for public web use?...
-
   return (
     <div>{checkLogin ? <MainApp /> : <Login isLoggedIn={handleLogin} />}</div>
   );
