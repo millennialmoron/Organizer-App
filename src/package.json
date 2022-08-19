@@ -12,7 +12,7 @@
     "passport": "^0.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "serve": "^14.0.1",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
@@ -28,7 +28,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build && NODE_PATH=src react-scripts build"
-    },
+  },
   "proxy": "http://localhost:8000",
   "eslintConfig": {
     "extends": [
