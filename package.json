@@ -5,7 +5,7 @@
   "main": "server.js",
   "script": {
     "start": "node server.js",
-    "heroku-postbuild": "cd src && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm run build"
 },
 "engines": {
   "node": "^16.15.0",
