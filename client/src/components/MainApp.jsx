@@ -43,7 +43,9 @@ export function MainApp(props) {
 
   const getUser = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user");
+      const response = await axios.get(
+        "https://organizer-react-app.herokuapp.com/user"
+      );
       let sessionLogin = true;
       let sessionUser = response.data.data;
       if (sessionLogin) {
@@ -59,7 +61,9 @@ export function MainApp(props) {
 
   const getLists = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/list");
+      const response = await axios.get(
+        "https://organizer-react-app.herokuapp.com/list"
+      );
       // console.log(response.data.data);
       if (checkList) {
         let savedList = response.data.data;
@@ -83,7 +87,9 @@ export function MainApp(props) {
 
   const getCity = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/weather/");
+      const response = await axios.get(
+        "https://organizer-react-app.herokuapp.com/weather"
+      );
       // console.log(response.data.data);
       apiKey = response.data.data.apiKey;
       query = response.data.data.query;
@@ -101,7 +107,9 @@ export function MainApp(props) {
   //Possibly need a different quote generator as this one has too low of a daily request counter.
   const getQuote = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/quote");
+      const response = await axios.get(
+        "https://organizer-react-app.herokuapp.com/quote"
+      );
       // console.log(response);
       let todaysQuote = response.data.data.quote;
       let todaysAuthor = response.data.data.author;
@@ -119,7 +127,9 @@ export function MainApp(props) {
 
   const getMeme = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/meme");
+      const response = await axios.get(
+        "https://organizer-react-app.herokuapp.com/meme"
+      );
       // console.log(response);
       let newURL = response.data.data;
       if (checkMeme) {
@@ -169,7 +179,9 @@ export function MainApp(props) {
       });
 
       axios
-        .post("http://localhost:8000/weather", { city: city })
+        .post("https://organizer-react-app.herokuapp.com/weather", {
+          city: city,
+        })
         .then(function (response) {
           // console.log(response);
         })
@@ -211,16 +223,21 @@ export function MainApp(props) {
     });
 
     axios
-      .post("http://localhost:8000/", { name: newItem, id: id })
+      .post("https://organizer-react-app.herokuapp.com/", {
+        name: newItem,
+        id: id,
+      })
       .then((response) => {
         // console.log(response);
       });
   }
 
   function deleteItem(id, count) {
-    axios.post("http://localhost:8000/delete", { id: id }).then((response) => {
-      // console.log(response);
-    });
+    axios
+      .post("https://organizer-react-app.herokuapp.com/delete", { id: id })
+      .then((response) => {
+        // console.log(response);
+      });
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {
         return index !== count;
