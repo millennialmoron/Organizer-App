@@ -240,7 +240,7 @@ async function main() {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
-  app.get("/build/static/js/main.533a6320.js", function (req, res) {
+  app.get("/static/js/main.533a6320.js", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "static/js/main.533a6320.js"));
   });
 
