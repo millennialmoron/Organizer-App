@@ -240,6 +240,10 @@ async function main() {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
+  app.get("/static/js/main.533a6320.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.533a6320.js"));
+  });
+
   app.get("/list", function (req, res) {
     return res.send({ data: defaultItems });
   });
