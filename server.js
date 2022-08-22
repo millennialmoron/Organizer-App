@@ -75,14 +75,14 @@ async function main() {
   const Item = mongoose.model("Item", itemsSchema);
 
   app.get("/user", function (req, res) {
-    // console.log(sessionUser);
+    console.log(sessionUser);
     return res.send({ data: sessionName });
   });
 
   app.post("/user", function (req, res) {
     let userEmail = req.body.email;
     sessionUser = userEmail;
-    console.log(sessionUser);
+    console.log("Posting: " + sessionUser);
     let userName = req.body.name;
     sessionName = userName;
     let userID = req.body.id;
@@ -93,6 +93,7 @@ async function main() {
     };
 
     User.find({ email: userEmail }, function (err, foundUser) {
+      console.log(foundUser);
       if (err) {
         console.log(err);
       } else if (foundUser.length === 0) {
@@ -103,7 +104,6 @@ async function main() {
           }
         });
       } else {
-        console.log(foundUser);
         findLists(sessionUser);
         getCity(sessionUser);
         getQuote();
