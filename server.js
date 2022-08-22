@@ -82,6 +82,7 @@ async function main() {
   app.post("/user", function (req, res) {
     let userEmail = req.body.email;
     sessionUser = userEmail;
+    console.log(sessionUser);
     let userName = req.body.name;
     sessionName = userName;
     let userID = req.body.id;
@@ -102,7 +103,7 @@ async function main() {
           }
         });
       } else {
-        // console.log(foundUser);
+        console.log(foundUser);
         findLists(sessionUser);
         getCity(sessionUser);
         getQuote();
@@ -183,7 +184,7 @@ async function main() {
         defaultItems = itemsList;
         return defaultItems;
 
-        // console.log(defaultItems);
+        console.log(defaultItems);
       }
     });
   }
@@ -197,7 +198,7 @@ async function main() {
           quote: quoteData[0].q,
           author: quoteData[0].a,
         };
-        // console.log(quote);
+        console.log(quote);
       });
     });
   }
@@ -230,7 +231,7 @@ async function main() {
         apiKey: apiKey,
         query: query,
       };
-      // console.log(userCity[0].city);
+      console.log(userCity[0].city);
     });
 
     return cityData;
@@ -245,16 +246,16 @@ async function main() {
   });
 
   app.get("/list", function (req, res) {
-    return res.send({ data: defaultItems });
+    res.send({ data: defaultItems });
   });
 
   app.get("/weather", function (req, res) {
     getCity(sessionUser);
-    return res.send({ data: cityData });
+    res.send({ data: cityData });
   });
 
   app.get("/quote", function (req, res) {
-    return res.send({ data: quote });
+    res.send({ data: quote });
   });
 
   app.get("/meme", function (req, res) {
@@ -262,7 +263,7 @@ async function main() {
       getMeme();
       memeYet = false;
     }
-    return res.send({ data: memeURL });
+    res.send({ data: memeURL });
   });
 
   app.post("/", function (req, res) {
