@@ -237,10 +237,6 @@ async function main() {
     return cityData;
   }
 
-  app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-
   app.get("/static/js/main.bbfcc2a4.js", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "static/js/main.bbfcc2a4.js"));
   });
@@ -264,6 +260,10 @@ async function main() {
       memeYet = false;
     }
     res.send({ data: memeURL });
+  });
+
+  app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
   app.post("/", function (req, res) {
