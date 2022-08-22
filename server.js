@@ -79,6 +79,8 @@ async function main() {
     return res.send({ data: sessionName });
   });
 
+  //figure out why the posts aren't even making it here!
+
   app.post("/user", function (req, res) {
     let userEmail = req.body.email;
     sessionUser = userEmail;
