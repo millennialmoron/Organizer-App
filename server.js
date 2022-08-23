@@ -264,21 +264,6 @@ async function main() {
     res.send({ data: memeURL });
   });
 
-  app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-
-  app.post("/", function (req, res) {
-    const newItem = req.body.name;
-    const id = req.body.id;
-    const item = new Item();
-    item.name = newItem;
-    item._id = id;
-    item.user = sessionUser;
-    item.save();
-    return "Success";
-  });
-
   app.post("/weather", function (req, res) {
     let userCity = req.body.city;
     // console.log(sessionUser);
@@ -305,6 +290,21 @@ async function main() {
         console.log("deleted");
       }
     });
+  });
+
+  app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+  });
+
+  app.post("/", function (req, res) {
+    const newItem = req.body.name;
+    const id = req.body.id;
+    const item = new Item();
+    item.name = newItem;
+    item._id = id;
+    item.user = sessionUser;
+    item.save();
+    return "Success";
   });
 }
 
