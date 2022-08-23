@@ -36,7 +36,7 @@ export function Login(props) {
     let userName = name;
     let userID = id;
     axios
-      .post("https://organizer-react-app.herokuapp.com/user", {
+      .post("/user", {
         email: userEmail,
         name: userName,
         id: userID,

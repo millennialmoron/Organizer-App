@@ -239,8 +239,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.bbfcc2a4.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.bbfcc2a4.js"));
+  app.get("/static/js/main.0eba152f.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.0eba152f.js"));
   });
 
   app.get("/list", function (req, res) {
