@@ -35,15 +35,24 @@ export function Login(props) {
     let userEmail = email;
     let userName = name;
     let userID = id;
-    axios
-      .post("/user", {
-        email: userEmail,
-        name: userName,
-        id: userID,
-      })
-      .then(function (response) {
-        console.log(response);
-      });
+
+    const pushUser = async () => {
+      try {
+        const sessionUser = await axios.post(
+          "https://organizer-react-app.herokuapp.com/user",
+          {
+            email: userEmail,
+            name: userName,
+            id: userID,
+          }
+        );
+        console.log(sessionUser);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    pushUser();
   }
 
   return (
