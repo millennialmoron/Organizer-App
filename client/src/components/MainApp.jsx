@@ -178,21 +178,6 @@ export function MainApp(props) {
         imgSrc: imgURL,
       });
 
-      const saveCity = async () => {
-        try {
-          const savedCity = await axios.post(
-            "https://organizer-react-app.herokuapp.com/weather",
-            {
-              city: city,
-            }
-          );
-          console.log(savedCity);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      saveCity();
       //this always shows one search result behind in the console, but the actual displayed information should be accurate now.
       // console.log(weather);
     });
@@ -209,6 +194,22 @@ export function MainApp(props) {
 
   function handleClick() {
     getWeather(inputText);
+
+    const saveCity = async () => {
+      try {
+        const savedCity = await axios.post(
+          "https://organizer-react-app.herokuapp.com/weather",
+          {
+            city: inputText,
+          }
+        );
+        console.log(savedCity);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    saveCity();
     setInputText("");
   }
 

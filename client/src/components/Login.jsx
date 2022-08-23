@@ -46,7 +46,7 @@ export function Login(props) {
             id: userID,
           }
         );
-        console.log(sessionUser);
+        console.log("from Login comp: " + sessionUser);
       } catch (e) {
         console.log(e);
       }

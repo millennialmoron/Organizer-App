@@ -75,13 +75,14 @@ async function main() {
   const Item = mongoose.model("Item", itemsSchema);
 
   app.get("/user", function (req, res) {
-    console.log(sessionUser);
+    console.log("from the get: " + sessionUser);
     return res.send({ data: sessionName });
   });
 
   //figure out why the posts aren't even making it here!
 
   app.post("/user", function (req, res) {
+    console.log("caught it: " + req.body);
     let userEmail = req.body.email;
     sessionUser = userEmail;
     console.log("Posting: " + sessionUser);
@@ -111,27 +112,27 @@ async function main() {
         getQuote();
       }
 
-      Item.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "user",
-            as: "sessionUser",
-          },
-        },
-      ]);
+      // Item.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "user",
+      //       foreignField: "user",
+      //       as: "sessionUser",
+      //     },
+      //   },
+      // ]);
 
-      City.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "user",
-            as: "sessionUser",
-          },
-        },
-      ]);
+      // City.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "user",
+      //       foreignField: "user",
+      //       as: "sessionUser",
+      //     },
+      //   },
+      // ]);
 
       return "Success";
     });
@@ -239,8 +240,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.c02d42bc.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.c02d42bc.js"));
+  app.get("/static/js/main.ead313f4.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.ead313f4.js"));
   });
 
   app.get("/list", function (req, res) {
