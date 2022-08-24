@@ -6,7 +6,7 @@ export function Login(props) {
   let loggedIn = false;
 
   function handleCallbackResponse(response) {
-    //console.log("Encoded JWT ID token: " + response.credential);
+    console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
     const userEmail = userObject.email;
     const userName = userObject.name;
@@ -41,7 +41,10 @@ export function Login(props) {
       id: userID,
     };
 
+    console.log("user data: " + userData);
+
     const pushUser = async () => {
+      console.log("attempting try to push");
       try {
         const sessionUser = await axios.post(
           "https://organizer-react-app.herokuapp.com/user",

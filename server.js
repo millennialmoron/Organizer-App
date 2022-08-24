@@ -82,63 +82,41 @@ async function main() {
   //figure out why the posts aren't even making it here!
 
   app.post("/user", function (req, res) {
-    console.log("caught it: " + req.data);
-    // let userEmail = req.body.email;
-    // sessionUser = userEmail;
-    // console.log("Posting: " + sessionUser);
-    // let userName = req.body.name;
-    // sessionName = userName;
-    // let userID = req.body.id;
-    // let data = {
-    //   email: userEmail,
-    //   name: userName,
-    //   _id: userID,
-    // };
+    console.log("caught it: " + req.body);
+    let userEmail = req.body.email;
+    sessionUser = userEmail;
+    console.log("Posting: " + sessionUser);
+    let userName = req.body.name;
+    sessionName = userName;
+    let userID = req.body.id;
+    let data = {
+      email: userEmail,
+      name: userName,
+      _id: userID,
+    };
 
-    // User.find({ email: userEmail }, function (err, foundUser) {
-    //   console.log(foundUser);
-    //   if (err) {
-    //     console.log(err);
-    //   } else if (foundUser.length === 0) {
-    //     var newUser = new User(data);
-    //     newUser.save((err) => {
-    //       if (err) {
-    //         console.log(err);
-    //       }
-    //     });
-    //   } else {
-    //     findLists(sessionUser);
-    //     getCity(sessionUser);
-    //     getQuote();
-    //   }
-
-    // Item.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "users",
-    //       localField: "user",
-    //       foreignField: "user",
-    //       as: "sessionUser",
-    //     },
-    //   },
-    // ]);
-
-    // City.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "users",
-    //       localField: "user",
-    //       foreignField: "user",
-    //       as: "sessionUser",
-    //     },
-    //   },
-    // ]);
-
-    return "Success";
+    User.find({ email: userEmail }, function (err, foundUser) {
+      console.log("FOUND IT! " + foundUser);
+      if (err) {
+        console.log(err);
+      } else if (foundUser.length === 0) {
+        var newUser = new User(data);
+        newUser.save((err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      } else {
+        findLists(sessionUser);
+        getCity(sessionUser);
+        getQuote();
+      }
+      return "Success";
+    });
   });
 
   function findLists(sessionUser) {
-    // console.log("running lists..." + sessionUser);
+    console.log("running lists..." + sessionUser);
     Item.find({ user: sessionUser }, function (err, itemsList) {
       if (err) {
         console.log(err);
@@ -239,8 +217,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.11e133d2.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.11e133d2.js"));
+  app.get("/static/js/main.76ca0154.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.76ca0154.js"));
   });
 
   app.get("/list", function (req, res) {
