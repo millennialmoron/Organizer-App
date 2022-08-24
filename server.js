@@ -204,14 +204,15 @@ async function main() {
         newCity.user = sessionUser;
         newCity.save();
         query = "New York";
+        console.log(userCity[0].city);
       } else {
         query = userCity[0].city;
+        console.log(userCity[0].city);
       }
       cityData = {
         apiKey: apiKey,
         query: query,
       };
-      console.log(userCity[0].city);
     });
 
     return cityData;
