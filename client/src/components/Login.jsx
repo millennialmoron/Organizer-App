@@ -37,11 +37,15 @@ export function Login(props) {
     });
   }, []);
 
-  function saveUser(data) {
-    console.log("user data: " + data);
+  function saveUser(userData) {
+    let data = {
+      email: userData.email,
+      name: userData.name,
+      id: userData.id,
+    };
 
     const pushUser = async () => {
-      console.log("attempting try to push");
+      console.log("attempting try to push" + data);
       try {
         const sessionUser = await axios.post("/user", { data: data });
         console.log("from Login comp: " + sessionUser);
