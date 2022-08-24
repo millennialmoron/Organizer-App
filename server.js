@@ -82,13 +82,13 @@ async function main() {
   //figure out why the posts aren't even making it here!
 
   app.post("/user", function (req, res) {
-    console.log("caught it: " + req.body.data);
-    let userEmail = req.body.data.email;
+    console.log("caught it: " + req.body);
+    let userEmail = req.body.email;
     sessionUser = userEmail;
     console.log("Posting: " + sessionUser);
-    let userName = req.body.data.name;
+    let userName = req.body.name;
     sessionName = userName;
-    let userID = req.body.data.id;
+    let userID = req.body.id;
     let data = {
       email: userEmail,
       name: userName,
