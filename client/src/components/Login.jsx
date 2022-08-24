@@ -16,18 +16,17 @@ export function Login(props) {
       name: userName,
       id: id,
     };
-    // console.log(userData);
+    console.log(userData);
     const pushUser = async () => {
-      console.log("attempting try to push" + userData);
+      console.log("attempting try to push " + userData.email);
       try {
-        const sessionUser = await axios.post("/user", { data: userData });
+        const sessionUser = await axios.post("/user", { userData });
         console.log("from Login comp: " + sessionUser);
       } catch (e) {
         console.log(e);
       }
     };
     pushUser();
-    // saveUser(userData);
     document.getElementById("signInDiv").hidden = true;
     loggedIn = true;
     props.isLoggedIn(loggedIn);
@@ -46,14 +45,6 @@ export function Login(props) {
       size: "large",
     });
   }, []);
-
-  function saveUser(userData) {
-    let data = {
-      email: userData.email,
-      name: userData.name,
-      id: userData.id,
-    };
-  }
 
   return (
     <div className="login">

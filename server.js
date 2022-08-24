@@ -111,6 +111,7 @@ async function main() {
         getCity(sessionUser);
         getQuote();
       }
+      res.status(200).json({ message: "It worked!" });
       return "Success";
     });
   });
@@ -218,8 +219,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.5e329c18.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.5e329c18.js"));
+  app.get("/static/js/main.aa255641.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.aa255641.js"));
   });
 
   app.get("/list", function (req, res) {
