@@ -82,13 +82,13 @@ async function main() {
   //figure out why the posts aren't even making it here!
 
   app.post("/user", function (req, res) {
-    console.log("caught it: " + req.body);
-    let userEmail = req.body.email;
+    console.log("caught it: " + req.body.data);
+    let userEmail = req.body.data.email;
     sessionUser = userEmail;
     console.log("Posting: " + sessionUser);
-    let userName = req.body.name;
+    let userName = req.body.data.name;
     sessionName = userName;
-    let userID = req.body.id;
+    let userID = req.body.data.id;
     let data = {
       email: userEmail,
       name: userName,
@@ -218,8 +218,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.be6a1040.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.be6a1040.js"));
+  app.get("/static/js/main.c44df417.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.c44df417.js"));
   });
 
   app.get("/list", function (req, res) {

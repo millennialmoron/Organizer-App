@@ -11,8 +11,13 @@ export function Login(props) {
     const userEmail = userObject.email;
     const userName = userObject.name;
     const id = userObject.jti;
-    console.log(userObject);
-    saveUser(userEmail, userName, id);
+    let userData = {
+      email: userEmail,
+      name: userName,
+      id: id,
+    };
+    console.log(userData);
+    saveUser(userData);
     document.getElementById("signInDiv").hidden = true;
     loggedIn = true;
     props.isLoggedIn(loggedIn);
@@ -32,22 +37,13 @@ export function Login(props) {
     });
   }, []);
 
-  function saveUser(email, name, id) {
-    let userEmail = email;
-    let userName = name;
-    let userID = id;
-    let userData = {
-      email: userEmail,
-      name: userName,
-      id: userID,
-    };
-
-    console.log("user data: " + userData);
+  function saveUser(data) {
+    console.log("user data: " + data);
 
     const pushUser = async () => {
       console.log("attempting try to push");
       try {
-        const sessionUser = await axios.post("/user", { data: userData });
+        const sessionUser = await axios.post("/user", { data: data });
         console.log("from Login comp: " + sessionUser);
       } catch (e) {
         console.log(e);
