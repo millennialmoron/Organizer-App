@@ -35,16 +35,17 @@ export function Login(props) {
     let userEmail = email;
     let userName = name;
     let userID = id;
+    let userData = {
+      email: userEmail,
+      name: userName,
+      id: userID,
+    };
 
     const pushUser = async () => {
       try {
         const sessionUser = await axios.post(
           "https://organizer-react-app.herokuapp.com/user",
-          {
-            email: userEmail,
-            name: userName,
-            id: userID,
-          }
+          { data: userData }
         );
         console.log("from Login comp: " + sessionUser);
       } catch (e) {
