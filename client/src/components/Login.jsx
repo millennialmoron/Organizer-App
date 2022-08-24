@@ -6,11 +6,12 @@ export function Login(props) {
   let loggedIn = false;
 
   function handleCallbackResponse(response) {
-    console.log("Encoded JWT ID token: " + response.credential);
+    // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
     const userEmail = userObject.email;
     const userName = userObject.name;
     const id = userObject.jti;
+    console.log(userObject);
     saveUser(userEmail, userName, id);
     document.getElementById("signInDiv").hidden = true;
     loggedIn = true;
@@ -46,10 +47,7 @@ export function Login(props) {
     const pushUser = async () => {
       console.log("attempting try to push");
       try {
-        const sessionUser = await axios.post(
-          "https://organizer-react-app.herokuapp.com/user",
-          { data: userData }
-        );
+        const sessionUser = await axios.post("/user", { data: userData });
         console.log("from Login comp: " + sessionUser);
       } catch (e) {
         console.log(e);

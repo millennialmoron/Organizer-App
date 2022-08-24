@@ -218,8 +218,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.76ca0154.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.76ca0154.js"));
+  app.get("/static/js/main.be6a1040.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.be6a1040.js"));
   });
 
   app.get("/list", function (req, res) {
