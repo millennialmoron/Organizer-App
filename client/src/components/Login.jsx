@@ -16,12 +16,12 @@ export function Login(props) {
       name: userName,
       id: id,
     };
-    console.log(userData);
+    // console.log(userData);
     const pushUser = async () => {
-      console.log("attempting try to push " + userData.email);
+      // console.log("attempting try to push " + userData.email);
       try {
-        const sessionUser = await axios.post("/user", { userData });
-        console.log("from Login comp: " + sessionUser);
+        const response = await axios.post("/user", { userData });
+        console.log("from Login component: " + response.message);
       } catch (e) {
         console.log(e);
       }

@@ -194,15 +194,12 @@ export function MainApp(props) {
 
   function handleClick() {
     getWeather(inputText);
-
+    let newCity = inputText;
     const saveCity = async () => {
       try {
-        const savedCity = await axios.post(
-          "https://organizer-react-app.herokuapp.com/weather",
-          {
-            city: inputText,
-          }
-        );
+        const savedCity = await axios.post("/weather", {
+          city: newCity,
+        });
         console.log(savedCity);
       } catch (err) {
         console.log(err);
@@ -228,22 +225,30 @@ export function MainApp(props) {
       return [...prevItems, newNote];
     });
 
-    axios
-      .post("https://organizer-react-app.herokuapp.com/", {
-        name: newItem,
-        id: id,
-      })
-      .then((response) => {
-        // console.log(response);
-      });
+    const addNewItem = async () => {
+      try {
+        const response = await axios.post("/", {
+          name: newItem,
+          id: id,
+        });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    addNewItem();
   }
 
   function deleteItem(id, count) {
-    axios
-      .post("https://organizer-react-app.herokuapp.com/delete", { id: id })
-      .then((response) => {
-        // console.log(response);
-      });
+    const deleteOldItem = async () => {
+      try {
+        const response = await axios.post("/delete", { id: id });
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    deleteOldItem();
     setItems((prevItems) => {
       return prevItems.filter((item, index) => {
         return index !== count;

@@ -82,10 +82,10 @@ async function main() {
   //figure out why the posts aren't even making it here!
 
   app.post("/user", function (req, res) {
-    console.log("caught it: " + req.body.userData);
+    // console.log("caught it: " + req.body.userData);
     let userEmail = req.body.userData.email;
     sessionUser = userEmail;
-    console.log("Posting: " + sessionUser);
+    // console.log("Posting: " + sessionUser);
     let userName = req.body.userData.name;
     sessionName = userName;
     let userID = req.body.userData.id;
@@ -165,7 +165,7 @@ async function main() {
         defaultItems = itemsList;
         return defaultItems;
 
-        console.log(defaultItems);
+        // console.log(defaultItems);
       }
     });
   }
@@ -179,7 +179,7 @@ async function main() {
           quote: quoteData[0].q,
           author: quoteData[0].a,
         };
-        console.log(quote);
+        // console.log(quote);
       });
     });
   }
@@ -219,8 +219,8 @@ async function main() {
     return cityData;
   }
 
-  app.get("/static/js/main.aa255641.js", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "static/js/main.aa255641.js"));
+  app.get("/static/js/main.ff1bb7ab.js", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "static/js/main.ff1bb7ab.js"));
   });
 
   app.get("/list", function (req, res) {
@@ -258,6 +258,7 @@ async function main() {
         }
       }
     );
+    res.status(200).json({ message: "It worked!" });
     return "Success";
   });
 
@@ -270,6 +271,7 @@ async function main() {
         console.log("deleted");
       }
     });
+    res.status(200).json({ message: "It worked!" });
   });
 
   app.get("/*", function (req, res) {
@@ -284,6 +286,7 @@ async function main() {
     item._id = id;
     item.user = sessionUser;
     item.save();
+    res.status(200).json({ message: "It worked!" });
     return "Success";
   });
 }
