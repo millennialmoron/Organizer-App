@@ -220,7 +220,7 @@ async function main() {
   }
 
   app.get("/public", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "privacy.html"));
+    res.sendFile(path.join(__dirname, "build", "views/privacy.html"));
   });
 
   app.get("/static/js/main.ff1bb7ab.js", function (req, res) {
