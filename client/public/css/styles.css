@@ -115,6 +115,11 @@ input[type="text"] {
   justify-content: space-between;
 }
 
+.privacy {
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
 footer {
   color: #dbd8e3;
   background-color: #5c5470;
