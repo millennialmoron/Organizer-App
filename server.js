@@ -199,7 +199,7 @@ async function main() {
     City.find({ user: sessionUser }, function (err, userCity) {
       if (err) {
         console.log(err);
-      } else if (userCity.length === 0) {
+      } else if (userCity[0].city.length === 0) {
         let newCity = new City();
         newCity.city = "New York";
         newCity.user = sessionUser;
