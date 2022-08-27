@@ -278,7 +278,7 @@ async function main() {
     res.status(200).json({ message: "It worked!" });
   });
 
-  app.get("/*", function (req, res) {
+  app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
