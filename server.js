@@ -278,8 +278,8 @@ async function main() {
     res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
-  app.get("/privacy", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "views/privacy.html"));
+  app.route("/privacy").get(function (req, res) {
+    res.sendFile(__dirname + "/build" + "/views/privacy.html");
   });
 
   app.post("/", function (req, res) {
