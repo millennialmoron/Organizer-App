@@ -219,6 +219,10 @@ async function main() {
     return cityData;
   }
 
+  app.get("/public", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "privacy.html"));
+  });
+
   app.get("/static/js/main.ff1bb7ab.js", function (req, res) {
     res.sendFile(path.join(__dirname, "build", "static/js/main.ff1bb7ab.js"));
   });
