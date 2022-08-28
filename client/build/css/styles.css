@@ -118,6 +118,15 @@ input[type="text"] {
 .privacy {
   font-size: 0.7rem;
   font-style: italic;
+  color: #dbd8e3;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 footer {

@@ -36,7 +36,7 @@ export function Login(props) {
     /* global google */
     google.accounts.id.initialize({
       client_id:
-        "1094993871261-a0p2bbbe2t55215167an6eoll754ealg.apps.googleusercontent.com",
+        "87656267421-mqe5l991p7cn8qv480u1rpc00l4tucno.apps.googleusercontent.com",
       callback: handleCallbackResponse,
     });
 
