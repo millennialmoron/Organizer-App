@@ -33,6 +33,7 @@ export function MainApp(props) {
   const [memeURL, setMemeURL] = useState("");
   const [checkMeme, setCheckMeme] = useState(true);
   const [user, setUser] = useState("");
+  const [weatherErr, setWeatherErr] = useState(false);
   let query = "New York City";
   const units = "metric";
   let temp = 0;
@@ -162,6 +163,7 @@ export function MainApp(props) {
       const weatherData = await response.json();
       if (!response.ok) {
         const error = weatherData && weatherData.message;
+        setWeatherErr(true);
         return Promise.reject(error);
       }
 
@@ -205,6 +207,17 @@ export function MainApp(props) {
         console.log(err);
       }
     };
+
+    if (weatherErr) {
+      newCity = "New York City";
+      setWeatherErr(false);
+      getWeather(newCity);
+      alert(
+        "Uh oh! It looks like there was a problem fetching the weather for " +
+          inputText +
+          ". Please make sure you have spelled everything correctly or try a different city. Remember it must be a recognizable city name."
+      );
+    }
 
     saveCity();
     setInputText("");
