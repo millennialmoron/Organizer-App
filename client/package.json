@@ -29,7 +29,7 @@
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm start"
   },
-  "homepage": "https://organizer-react-app.herokuapp.com/",
+  "homepage": "https://organizer-react-app-awqr.onrender.com/",
   "eslintConfig": {
     "extends": [
       "react-app",
