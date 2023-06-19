@@ -45,7 +45,7 @@ export function MainApp(props) {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        "https://organizer-react-app.herokuapp.com/user"
+        "https://organizer-react-app-awqr.onrender.com/user"
       );
       let sessionLogin = true;
       let sessionUser = response.data.data;
@@ -63,7 +63,7 @@ export function MainApp(props) {
   const getLists = async () => {
     try {
       const response = await axios.get(
-        "https://organizer-react-app.herokuapp.com/list"
+        "https://organizer-react-app-awqr.onrender.com/list"
       );
       // console.log(response.data.data);
       if (checkList) {
@@ -89,7 +89,7 @@ export function MainApp(props) {
   const getCity = async () => {
     try {
       const response = await axios.get(
-        "https://organizer-react-app.herokuapp.com/weather"
+        "https://organizer-react-app-awqr.onrender.com/weather"
       );
       // console.log(response.data.data);
       apiKey = response.data.data.apiKey;
@@ -109,7 +109,7 @@ export function MainApp(props) {
   const getQuote = async () => {
     try {
       const response = await axios.get(
-        "https://organizer-react-app.herokuapp.com/quote"
+        "https://organizer-react-app-awqr.onrender.com/quote"
       );
       // console.log(response);
       let todaysQuote = response.data.data.quote;
@@ -129,7 +129,7 @@ export function MainApp(props) {
   const getMeme = async () => {
     try {
       const response = await axios.get(
-        "https://organizer-react-app.herokuapp.com/meme"
+        "https://organizer-react-app-awqr.onrender.com/meme"
       );
       // console.log(response);
       let newURL = response.data.data;
